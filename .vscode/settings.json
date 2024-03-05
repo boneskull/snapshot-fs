@@ -1,0 +1,11 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit",
+    "source.fixAll": "explicit",
+    "source.formatDocument": "explicit"
+  },
+  "prettier.useEditorConfig": true,
+  "files.insertFinalNewline": false,
+  "editor.formatOnSave": true
+}
