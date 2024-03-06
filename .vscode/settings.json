@@ -7,5 +7,7 @@
   },
   "prettier.useEditorConfig": true,
   "files.insertFinalNewline": false,
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "eslint.experimental.useFlatConfig": true,
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

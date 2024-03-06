@@ -1,0 +1,16 @@
+name: Node CI
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - name: Install dependencies
+        uses: bahmutov/npm-install@2509f13e8485d88340a789a3f7ca11aaac47c9fc # v1.8.36
+        with:
+          install-command: npm ci --foreground-scripts
+      - name: Lint
+        run: npm run lint

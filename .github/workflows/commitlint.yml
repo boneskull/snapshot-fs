@@ -1,0 +1,27 @@
+name: Validate Commit Messages
+on: [pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  commitlint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node_version: [20]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - name: Use Node.js ${{ matrix.node_version }}
+        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3.8.2
+        with:
+          node-version: ${{ matrix.node_version }}
+      - name: Install dependencies
+        uses: bahmutov/npm-install@2509f13e8485d88340a789a3f7ca11aaac47c9fc # v1.8.36
+        with:
+          install-command: npm ci --foreground-scripts
+      - name: Run commitlint
+        uses: wagoid/commitlint-github-action@0d749a1a91d4770e983a7b8f83d4a3f0e7e0874e # v5.4.4
+        env:
+          NODE_PATH: ${{ github.workspace }}/node_modules
