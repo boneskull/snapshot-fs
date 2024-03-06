@@ -3,6 +3,7 @@ import tseslint from 'typescript-eslint';
 import jsConfig from './.config/eslint-js.config.js';
 import tsConfig from './.config/eslint-ts.config.js';
 
+// TODO: setup eslint-plugin-jsonc & eslint-plugin-n
 export default tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
