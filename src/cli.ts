@@ -60,16 +60,9 @@ async function main(): Promise<void> {
   }
   const [dir, dest] = positionals;
 
-  let output: string;
-
-  if (binary) {
-    const snapshot = await createSnapshot({ dir });
-    output = Buffer.from(snapshot).toString('utf-8');
-  }
-  else {
-    const vol = await createDirectoryJson({ dir, root });
-    output = JSON.stringify(vol.toJSON(), null, 2);
-  }
+  const output: string = binary
+    ? await createSnapshot({ dir })
+    : await createDirectoryJson({ dir, root });
 
   if (dest) {
     await writeFile(dest, output, 'utf-8');
@@ -79,8 +72,7 @@ async function main(): Promise<void> {
       dir,
       dest,
     );
-  }
-  else {
+  } else {
     console.log(output);
   }
 }

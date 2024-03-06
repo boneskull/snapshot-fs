@@ -5,12 +5,12 @@
  * @module snapshot-fs/directory-json
  */
 
-import { glob } from 'glob';
+import { globIterate, type FSOption } from 'glob';
 import isBinaryPath from 'is-binary-path';
 import { memfs } from 'memfs';
-import type { FsPromisesApi } from 'memfs/lib/node/types/FsPromisesApi.js';
-import type { DirectoryJSON, Volume } from 'memfs/lib/volume.js';
-import fsPromises from 'node:fs/promises';
+import { type FsApi } from 'memfs/lib/node/types/index.js';
+import type { DirectoryJSON } from 'memfs/lib/volume.js';
+import nodeFs from 'node:fs';
 import path from 'node:path';
 
 /**
@@ -34,9 +34,9 @@ export interface CreateDirectoryJsonOptions {
   root?: string;
 
   /**
-   * Promise-based filesystem object
+   * Filesystem API
    */
-  fs?: FsPromisesApi;
+  fs?: FsApi;
 }
 
 /**
@@ -50,12 +50,16 @@ export interface CreateDirectoryJsonOptions {
 export async function createDirectoryJson({
   dir = process.cwd(),
   root = DEFAULT_MEMFS_ROOT,
-  fs = fsPromises as unknown as FsPromisesApi,
-}: CreateDirectoryJsonOptions = {}): Promise<Volume> {
+  fs,
+}: CreateDirectoryJsonOptions = {}): Promise<string> {
   // recursify dirs
-  const dirPattern: string = path.join(dir, '**');
+  const dirPattern: string = path.join(dir, '**', '*');
 
-  const files = await glob(dirPattern, {
+  fs = fs ?? (nodeFs as unknown as FsApi);
+
+  const json: DirectoryJSON = {};
+
+  for await (const file of globIterate(dirPattern, {
     // we don't actually need filetypes, but we want the PathScurry objects
     withFileTypes: true,
     // don't need dirs because memfs creates dir structure from relative
@@ -63,24 +67,20 @@ export async function createDirectoryJson({
     nodir: true,
     // include dotfiles because createSnapshot does
     dot: true,
-    root,
-  });
+    fs: fs as unknown as FSOption,
+    cwd: dir,
+  })) {
+    if (isBinaryPath(file.name)) {
+      console.error('[WARN] Found potential binary file %s', file.fullpath());
+    }
 
-  // instead of building a JSON object, we could actually use mkdir/writeFile,
-  // but that's slow
-  const entries = await Promise.all(
-    files.map(async (file) => {
-      if (isBinaryPath(file.name)) {
-        console.error(
-          '[WARN] Found potential binary file %s; use --binary instead',
-          file.fullpath(),
-        );
-      }
-      const content = await fs.readFile(file.fullpath(), 'utf-8');
-      return [file.relativePosix(), content];
-    }),
-  );
+    json[file.relativePosix()] = await fs.promises.readFile(
+      file.fullpath(),
+      'utf-8',
+    );
+  }
 
-  const { vol } = memfs(Object.fromEntries(entries) as DirectoryJSON, root);
-  return vol;
+  const { vol } = memfs(json, root);
+
+  return JSON.stringify(vol.toJSON(), null, 2);
 }
