@@ -18,6 +18,6 @@ export default tseslint.config(
   tsConfig,
   jsConfig,
   {
-    ignores: ['dist', 'coverage', '__snapshots__'],
+    ignores: ['dist', 'coverage', '__snapshots__', '.tshy*'],
   },
 );

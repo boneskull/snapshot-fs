@@ -49,10 +49,11 @@
   "scripts": {
     "build": "tshy",
     "dev": "tshy --watch",
-    "lint:commit": "commitlint",
+    "lint": "run-p lint:*",
+    "lint-commit": "commitlint",
+    "lint-staged": "lint-staged",
     "lint:deps": "depcruise -c ./.config/dependency-cruiser.cjs src",
     "lint:sources": "eslint .",
-    "lint:staged": "lint-staged",
     "prepare": "npm run build",
     "test": "glob -c \"node --import tsx --test\" \"./src/test/*.spec.ts\""
   },
