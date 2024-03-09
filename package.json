@@ -47,9 +47,8 @@
     "tool"
   ],
   "scripts": {
-    "build": "tshy",
+    "build": "node --env-file=.build.env ./node_modules/.bin/tshy",
     "coverage": "c8 --all --include src npm run test",
-    "dev": "tshy --watch",
     "lint": "run-p lint:*",
     "lint-commit": "commitlint",
     "lint-staged": "lint-staged",
