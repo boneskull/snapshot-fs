@@ -59,7 +59,8 @@ console.log(vol.toTree());
 
 [memfs][]'s snapshots support binary files, but the `DirectoryJSON` format does not. If you need to support binary files, use the `--binary` flag. This creates a JSON _snapshot_ (for the curious, it's encoded as ["Compact JSON"](https://jsonjoy.com/specs/compact-json)) and must be consumed differently.
 
-> [!NOTE] The resulting JSON is for machines.
+> [!NOTE]
+> The resulting JSON is for machines.
 
 ```sh
 snapshot-fs --binary /some/dir /path/to/output.json
