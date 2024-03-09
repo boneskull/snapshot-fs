@@ -3,11 +3,14 @@ name: Node CI
 on: [push, pull_request]
 
 jobs:
-  lint:
-    name: Lint
+  test:
+    name: Build & Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
       - name: Install dependencies
         uses: bahmutov/npm-install@2509f13e8485d88340a789a3f7ca11aaac47c9fc # v1.8.36
         with:
