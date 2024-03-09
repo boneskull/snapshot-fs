@@ -75,7 +75,7 @@ describe('snapshot-fs cli', () => {
   describe('--root', () => {
     it('should set the root of the DirectoryJSON output', async () => {
       const { stdout: actual } = await execCli(FIXTURE_DIR, '--root', '/foo');
-      const json = JSON.parse(actual);
+      const json = JSON.parse(actual) as object;
 
       deepEqual(json, {
         '/foo/README.md': 'This fixture contains this `README.md` file\n',

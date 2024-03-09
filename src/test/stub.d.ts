@@ -1,1 +1,5 @@
-declare module '@matteo.collina/snap';
+declare module '@matteo.collina/snap' {
+  export default function Snap(
+    filepath: string,
+  ): (value: any) => Promise<string>;
+}
