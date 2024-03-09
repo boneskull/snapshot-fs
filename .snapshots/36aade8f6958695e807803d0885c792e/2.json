@@ -1,0 +1,1 @@
+"snapshot-fs [options..] <dir> [dest.json]\n\n  Writes a DirectoryJSON object or snapshot\n  (with --binary flag) to file. For use with memfs\n\n  Options:\n\n    --binary/-b     - Output memfs JSON snapshot\n    --root/-r       - DirectoryJSON root (default: /)\n    --help/-h       - Show this help message"

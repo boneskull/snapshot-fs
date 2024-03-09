@@ -5,7 +5,7 @@ import {
   type JsonUint8Array,
 } from 'memfs/lib/snapshot/json.js';
 import { type SnapshotNode } from 'memfs/lib/snapshot/types.js';
-import assert from 'node:assert';
+import { equal } from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import nodeFs from 'node:fs';
 import path from 'node:path';
@@ -42,6 +42,6 @@ describe('createSnapshot()', () => {
     const realHash = createHash('sha256').update(realFile).digest('hex');
     const memHash = createHash('sha256').update(memFile).digest('hex');
 
-    assert.strictEqual(realHash, memHash);
+    equal(realHash, memHash);
   });
 });
