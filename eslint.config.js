@@ -1,3 +1,5 @@
+// @ts-check
+
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import jsConfig from './.config/eslint-js.config.js';
@@ -15,8 +17,15 @@ export default tseslint.config(
       },
     },
   },
+  // @ts-expect-error - FIXME
   tsConfig,
   jsConfig,
+  {
+    files: ['src/test/**/*.spec.ts'],
+    rules: {
+      '@typescript-eslint/no-floating-promises': 'off',
+    },
+  },
   {
     ignores: ['dist', 'coverage', '__snapshots__', '.tshy*'],
   },

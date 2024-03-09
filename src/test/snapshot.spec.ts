@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
 import { memfs } from 'memfs';
 import { type FsApi } from 'memfs/lib/node/types/index.js';
 import {

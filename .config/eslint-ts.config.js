@@ -1,5 +1,8 @@
+// @ts-check
+
 import stylisticTs from '@stylistic/eslint-plugin-ts';
 
+// TODO: figure out what type to use here
 export default {
   files: ['**/*.ts'],
   plugins: {
