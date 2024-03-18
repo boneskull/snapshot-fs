@@ -1,19 +1,19 @@
 // @ts-check
 
-import eslint from '@eslint/js';
+import eslintPluginJsonc from 'eslint-plugin-jsonc';
 import tseslint from 'typescript-eslint';
 import jsConfig from './.config/eslint-js.config.js';
 import tsConfig from './.config/eslint-ts.config.js';
 
 // TODO: setup eslint-plugin-jsonc & eslint-plugin-n
 export default tseslint.config(
-  eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
   {
     languageOptions: {
       parserOptions: {
         project: './.config/tsconfig.eslint.json',
         tsconfigRootDir: import.meta.dirname,
+        extraFileExtensions: ['.json5', '.jsonc'],
       },
     },
   },
@@ -25,6 +25,11 @@ export default tseslint.config(
     rules: {
       '@typescript-eslint/no-floating-promises': 'off',
     },
+  },
+  {
+    ...eslintPluginJsonc.configs['flat/prettier'][0],
+    files: ['**/*.json5', '**/*.jsonc'],
+    extends: [tseslint.configs.disableTypeChecked],
   },
   {
     ignores: ['dist', 'coverage', '__snapshots__', '.tshy*'],
