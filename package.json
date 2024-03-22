@@ -73,7 +73,7 @@
     "@types/eslint__js": "8.42.3",
     "@types/node": "20.11.24",
     "c8": "9.1.0",
-    "dependency-cruiser": "16.2.3",
+    "dependency-cruiser": "16.2.4",
     "eslint": "8.57.0",
     "eslint-plugin-jsonc": "2.14.0",
     "eslint-plugin-n": "16.6.2",
