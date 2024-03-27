@@ -69,7 +69,7 @@
     "@matteo.collina/snap": "0.2.1",
     "@stylistic/eslint-plugin-js": "1.6.3",
     "@stylistic/eslint-plugin-ts": "1.6.3",
-    "@tsconfig/node20": "20.1.2",
+    "@tsconfig/node20": "20.1.3",
     "@types/eslint__js": "8.42.3",
     "@types/node": "20.11.30",
     "c8": "9.1.0",
