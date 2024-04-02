@@ -26,11 +26,12 @@ export default tseslint.config(
       '@typescript-eslint/no-floating-promises': 'off',
     },
   },
+  eslintPluginJsonc.configs['flat/prettier'][0],
   {
-    ...eslintPluginJsonc.configs['flat/prettier'][0],
-    files: ['**/*.json5', '**/*.jsonc'],
+    ...eslintPluginJsonc.configs['flat/prettier'][1],
     extends: [tseslint.configs.disableTypeChecked],
   },
+  eslintPluginJsonc.configs['flat/prettier'][2],
   {
     ignores: ['dist', 'coverage', '__snapshots__', '.tshy*'],
   },
