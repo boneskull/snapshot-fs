@@ -9,7 +9,6 @@
     ':semanticPrefixChore',
     'config:js-app',
     'group:definitelyTyped',
-
     'npm:unpublishSafe',
     'group:jsTest',
   ],
