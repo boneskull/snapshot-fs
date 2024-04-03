@@ -5,7 +5,7 @@ import stylisticTs from '@stylistic/eslint-plugin-ts';
 import eslintPluginJsonc from 'eslint-plugin-jsonc';
 import tseslint from 'typescript-eslint';
 
-// TODO: setup eslint-plugin-jsonc & eslint-plugin-n
+// TODO: setup eslint-plugin-n
 export default tseslint.config(
   ...tseslint.configs.recommendedTypeChecked,
   {
