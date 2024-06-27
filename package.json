@@ -63,19 +63,19 @@
     "memfs": "4.8.2"
   },
   "devDependencies": {
-    "@commitlint/cli": "19.2.2",
-    "@commitlint/config-conventional": "19.1.0",
+    "@commitlint/cli": "19.3.0",
+    "@commitlint/config-conventional": "19.2.2",
     "@eslint/js": "8.57.0",
     "@matteo.collina/snap": "0.3.0",
-    "@stylistic/eslint-plugin-js": "1.7.2",
-    "@stylistic/eslint-plugin-ts": "1.7.2",
+    "@stylistic/eslint-plugin-js": "1.8.1",
+    "@stylistic/eslint-plugin-ts": "1.8.1",
     "@tsconfig/node20": "20.1.4",
     "@types/eslint__js": "8.42.3",
     "@types/node": "20.12.12",
     "c8": "9.1.0",
     "dependency-cruiser": "16.2.4",
     "eslint": "8.57.0",
-    "eslint-plugin-jsonc": "2.15.1",
+    "eslint-plugin-jsonc": "2.16.0",
     "eslint-plugin-n": "16.6.2",
     "husky": "9.0.11",
     "lint-staged": "15.2.4",
@@ -87,7 +87,7 @@
     "tshy": "1.13.1",
     "tsx": "4.7.3",
     "typescript": "5.4.3",
-    "typescript-eslint": "7.4.0"
+    "typescript-eslint": "7.13.1"
   },
   "lint-staged": {
     "*.{js,json,md,ya?ml}": [
