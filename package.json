@@ -86,7 +86,7 @@
     "prettier-plugin-pkg": "0.18.1",
     "tshy": "1.15.1",
     "tsx": "4.15.7",
-    "typescript": "5.4.3",
+    "typescript": "5.4.5",
     "typescript-eslint": "7.13.1"
   },
   "lint-staged": {
