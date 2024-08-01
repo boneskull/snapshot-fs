@@ -12,6 +12,7 @@
     "snapshot-fs": "./dist/esm/cli.js"
   },
   "main": "./dist/commonjs/index.js",
+  "module": "./dist/esm/index.js",
   "exports": {
     "./package.json": "./package.json",
     ".": {
