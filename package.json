@@ -78,7 +78,7 @@
     "eslint": "9.10.0",
     "eslint-plugin-jsonc": "2.16.0",
     "eslint-plugin-n": "17.10.2",
-    "husky": "9.1.5",
+    "husky": "9.1.6",
     "lint-staged": "15.2.10",
     "npm-run-all2": "6.2.2",
     "prettier": "3.3.3",
