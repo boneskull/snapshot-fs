@@ -72,7 +72,7 @@
     "@stylistic/eslint-plugin-ts": "2.10.0",
     "@tsconfig/node20": "20.1.4",
     "@types/eslint__js": "8.42.3",
-    "@types/node": "22.8.4",
+    "@types/node": "22.8.5",
     "c8": "10.1.2",
     "dependency-cruiser": "16.5.0",
     "eslint": "9.13.0",
