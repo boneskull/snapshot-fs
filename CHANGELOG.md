@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.5](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v1.0.4...snapshot-fs-v1.0.5) (2024-11-25)
+
+
+### Bug Fixes
+
+* **pkg:** add missing repository field ([492f801](https://github.com/boneskull/snapshot-fs/commit/492f80176c4c35f38359c240f47995112d4225bf))
+
 ## [1.0.4](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v1.0.3...snapshot-fs-v1.0.4) (2024-11-25)
 
 
