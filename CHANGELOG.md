@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.6](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v1.0.5...snapshot-fs-v1.0.6) (2024-12-08)
+
+
+### Bug Fixes
+
+* **deps:** update dependency memfs to v4.14.1 ([#202](https://github.com/boneskull/snapshot-fs/issues/202)) ([de94b0e](https://github.com/boneskull/snapshot-fs/commit/de94b0e33b8b2725d991b2747abd3d0f9b16f311))
+
 ## [1.0.5](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v1.0.4...snapshot-fs-v1.0.5) (2024-11-25)
 
 
