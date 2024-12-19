@@ -59,7 +59,7 @@
     "lint-staged": "lint-staged",
     "lint:deps": "knip --no-exit-code",
     "lint:sources": "eslint .",
-    "prepare": "npm run build",
+    "prepare": "husky; npm run build",
     "test": "glob -c \"node --import tsx --test\" \"./src/test/*.spec.ts\""
   },
   "dependencies": {
