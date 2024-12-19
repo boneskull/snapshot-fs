@@ -10,33 +10,19 @@
 
 import { writeFile } from 'node:fs/promises';
 import { parseArgs } from 'node:util';
+
 import { createDirectoryJson, createSnapshot } from './index.js';
-
-function showHelp() {
-  console.log(`
-  snapshot-fs [options..] <dir> [dest.json]
-
-  Writes a DirectoryJSON object or snapshot
-  (with --binary flag) to file. For use with memfs
-
-  Options:
-
-    --binary/-b     - Output memfs JSON snapshot
-    --root/-r       - DirectoryJSON root (default: /)
-    --help/-h       - Show this help message
-`);
-}
 
 async function main(): Promise<void> {
   const {
     positionals,
-    values: { help, binary, root },
+    values: { binary, help, root },
   } = parseArgs({
     allowPositionals: true,
     options: {
-      help: { type: 'boolean', short: 'h' },
-      binary: { type: 'boolean', short: 'b' },
-      root: { type: 'string', short: 'r' },
+      binary: { short: 'b', type: 'boolean' },
+      help: { short: 'h', type: 'boolean' },
+      root: { short: 'r', type: 'string' },
     },
   });
 
@@ -75,6 +61,21 @@ async function main(): Promise<void> {
   } else {
     console.log(output);
   }
+}
+
+function showHelp() {
+  console.log(`
+  snapshot-fs [options..] <dir> [dest.json]
+
+  Writes a DirectoryJSON object or snapshot
+  (with --binary flag) to file. For use with memfs
+
+  Options:
+
+    --binary/-b     - Output memfs JSON snapshot
+    --root/-r       - DirectoryJSON root (default: /)
+    --help/-h       - Show this help message
+`);
 }
 
 main().catch((err) => {
