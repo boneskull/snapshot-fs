@@ -1,10 +1,11 @@
-import { memfs, type DirectoryJSON } from 'memfs';
+import { type DirectoryJSON, memfs } from 'memfs';
 import { type FsApi } from 'memfs/lib/node/types/index.js';
 import assert from 'node:assert';
 import { createHash } from 'node:crypto';
 import nodeFs from 'node:fs';
 import path from 'node:path';
 import { before, describe, it } from 'node:test';
+
 import { createDirectoryJson } from '../directory-json.js';
 import { sourceDir } from './source-dir.js';
 
@@ -15,8 +16,8 @@ describe('createDirectoryJson()', () => {
 
   before(async () => {
     const result = await createDirectoryJson({
-      fs: nodeFs as unknown as FsApi,
       dir: FIXTURE_DIR,
+      fs: nodeFs as unknown as FsApi,
     });
     vol.fromJSON(JSON.parse(result) as DirectoryJSON, '/');
 

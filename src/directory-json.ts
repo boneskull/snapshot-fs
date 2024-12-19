@@ -5,11 +5,12 @@
  * @module snapshot-fs/directory-json
  */
 
-import { globIterate, type FSOption } from 'glob';
+import type { FsApi } from 'memfs/lib/node/types/index.js';
+import type { DirectoryJSON } from 'memfs/lib/volume.js';
+
+import { type FSOption, globIterate } from 'glob';
 import isBinaryPath from 'is-binary-path';
 import { memfs } from 'memfs';
-import { type FsApi } from 'memfs/lib/node/types/index.js';
-import type { DirectoryJSON } from 'memfs/lib/volume.js';
 import nodeFs from 'node:fs';
 import path from 'node:path';
 
@@ -29,14 +30,14 @@ export interface CreateDirectoryJsonOptions {
   dir?: string;
 
   /**
-   * Memfs root
-   */
-  root?: string;
-
-  /**
    * Filesystem API
    */
   fs?: FsApi;
+
+  /**
+   * Memfs root
+   */
+  root?: string;
 }
 
 /**
@@ -49,8 +50,8 @@ export interface CreateDirectoryJsonOptions {
  */
 export async function createDirectoryJson({
   dir = process.cwd(),
-  root = DEFAULT_MEMFS_ROOT,
   fs,
+  root = DEFAULT_MEMFS_ROOT,
 }: CreateDirectoryJsonOptions = {}): Promise<string> {
   // recursify dirs
   const dirPattern: string = path.join(dir, '**', '*');
@@ -60,15 +61,15 @@ export async function createDirectoryJson({
   const json: DirectoryJSON = {};
 
   for await (const file of globIterate(dirPattern, {
-    // we don't actually need filetypes, but we want the PathScurry objects
-    withFileTypes: true,
-    // don't need dirs because memfs creates dir structure from relative
-    // filepaths
-    nodir: true,
+    cwd: dir,
     // include dotfiles because createSnapshot does
     dot: true,
     fs: fs as unknown as FSOption,
-    cwd: dir,
+    // don't need dirs because memfs creates dir structure from relative
+    // filepaths
+    nodir: true,
+    // we don't actually need filetypes, but we want the PathScurry objects
+    withFileTypes: true,
   })) {
     if (isBinaryPath(file.name)) {
       console.error('[WARN] Found potential binary file %s', file.fullpath());
