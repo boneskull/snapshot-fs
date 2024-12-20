@@ -57,7 +57,7 @@
     "lint": "run-p lint:*",
     "lint-commit": "commitlint",
     "lint-staged": "lint-staged",
-    "lint:deps": "knip --no-exit-code",
+    "lint:deps": "knip",
     "lint:sources": "eslint .",
     "prepare": "husky; npm run build",
     "test": "glob -c \"node --import tsx --test\" \"./src/test/*.spec.ts\""
