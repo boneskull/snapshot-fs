@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { before, describe, it } from 'node:test';
 import { promisify } from 'node:util';
+
 import { sourceDir } from './source-dir.js';
 
 const CLI_PATH = path.join(sourceDir, '..', 'cli.ts');
@@ -21,12 +22,12 @@ const snap = Snap(sourceDir);
  * @returns An object containing the trimmed `stdout` and `stderr`.
  */
 async function execCli(...args: string[]) {
-  const { stdout, stderr } = await execAsync(
+  const { stderr, stdout } = await execAsync(
     `npx tsx ${CLI_PATH} ${args.join(' ')}`,
   );
   return {
-    stdout: stdout.trim(),
     stderr: stderr.trim(),
+    stdout: stdout.trim(),
   };
 }
 
@@ -42,7 +43,7 @@ describe('snapshot-fs cli', () => {
   describe('when output path provided', () => {
     let dir: string;
     let dest: string;
-    let result: { stdout: string; stderr: string };
+    let result: { stderr: string; stdout: string; };
 
     before(async () => {
       dir = await mkdtemp(path.join(tmpdir(), 'snapshot-fs-'));
@@ -52,8 +53,8 @@ describe('snapshot-fs cli', () => {
 
     it('should not print to stdout', async () => {
       deepEqual(result, {
-        stdout: '',
         stderr: `[INFO] Wrote DirectoryJSON of ${FIXTURE_DIR} to ${dest}`,
+        stdout: '',
       });
     });
 

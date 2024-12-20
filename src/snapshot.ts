@@ -5,14 +5,15 @@
  * @module snapshot-fs/snapshot
  * @see {@link https://github.com/streamich/memfs/blob/master/docs/snapshot/index.md}
  */
+
 import { memfs } from 'memfs';
 import { type FsApi, type FsPromisesApi } from 'memfs/lib/node/types/index.js';
 import {
   fromJsonSnapshot,
-  toJsonSnapshot,
   type JsonUint8Array,
-  type SnapshotNode,
-} from 'memfs/lib/snapshot/index.js';
+  toJsonSnapshot,
+} from 'memfs/lib/snapshot/json.js';
+import { type SnapshotNode } from 'memfs/lib/snapshot/types.js';
 import { type Volume } from 'memfs/lib/volume.js';
 import nodeFs from 'node:fs';
 
