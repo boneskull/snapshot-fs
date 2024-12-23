@@ -81,7 +81,7 @@
     "dependency-cruiser": "16.8.0",
     "eslint": "9.17.0",
     "eslint-plugin-jsonc": "2.18.2",
-    "eslint-plugin-n": "17.15.0",
+    "eslint-plugin-n": "17.15.1",
     "husky": "9.1.7",
     "lint-staged": "15.2.11",
     "npm-run-all2": "7.0.2",
