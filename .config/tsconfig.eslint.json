@@ -6,6 +6,6 @@
     "checkJs": true,
     "rootDir": ".."
   },
-  "include": ["*.cjs", "../*.js", "../*.cjs", "../src/**/*"],
+  "include": ["*.cjs", "../*.js", "../*.cjs", "../src/**/*", "../test/**/*"],
   "exclude": ["**/node_modules/**", "**/dist/**"]
 }

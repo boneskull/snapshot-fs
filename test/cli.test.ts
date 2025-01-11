@@ -1,18 +1,17 @@
-import Snap from '@matteo.collina/snap';
-import { deepEqual, equal } from 'node:assert/strict';
+import { deepEqual } from 'node:assert/strict';
 import { exec } from 'node:child_process';
 import { mkdtemp, readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { before, describe, it } from 'node:test';
 import { promisify } from 'node:util';
+
 import { sourceDir } from './source-dir.js';
 
 const CLI_PATH = path.join(sourceDir, '..', 'cli.ts');
 const FIXTURE_DIR = path.join(sourceDir, 'fixture', 'text');
 
 const execAsync = promisify(exec);
-const snap = Snap(sourceDir);
 
 /**
  * Executes the CLI command with the provided arguments and returns the trimmed `stdout` and `stderr`.
@@ -21,28 +20,27 @@ const snap = Snap(sourceDir);
  * @returns An object containing the trimmed `stdout` and `stderr`.
  */
 async function execCli(...args: string[]) {
-  const { stdout, stderr } = await execAsync(
+  const { stderr, stdout } = await execAsync(
     `npx tsx ${CLI_PATH} ${args.join(' ')}`,
   );
   return {
-    stdout: stdout.trim(),
     stderr: stderr.trim(),
+    stdout: stdout.trim(),
   };
 }
 
 describe('snapshot-fs cli', () => {
   describe('when no output filepath provided', () => {
-    it('should print to stdout', async () => {
+    it('should print to stdout', async (t) => {
       const { stdout: actual } = await execCli(FIXTURE_DIR);
-      const expected = await snap(actual);
-      equal(actual, expected);
+      t.assert.snapshot(actual);
     });
   });
 
   describe('when output path provided', () => {
     let dir: string;
     let dest: string;
-    let result: { stdout: string; stderr: string };
+    let result: { stderr: string; stdout: string };
 
     before(async () => {
       dir = await mkdtemp(path.join(tmpdir(), 'snapshot-fs-'));
@@ -52,23 +50,21 @@ describe('snapshot-fs cli', () => {
 
     it('should not print to stdout', async () => {
       deepEqual(result, {
-        stdout: '',
         stderr: `[INFO] Wrote DirectoryJSON of ${FIXTURE_DIR} to ${dest}`,
+        stdout: '',
       });
     });
 
-    it('should write to file', async () => {
+    it('should write to file', async (t) => {
       const actual = await readFile(dest, 'utf-8');
-      const expected = await snap(actual);
-      equal(actual, expected);
+      t.assert.snapshot(actual);
     });
   });
 
   describe('--help', () => {
-    it('should print help', async () => {
+    it('should print help', async (t) => {
       const { stdout: actual } = await execCli('--help');
-      const expected = await snap(actual);
-      equal(actual, expected);
+      t.assert.snapshot(actual);
     });
   });
 

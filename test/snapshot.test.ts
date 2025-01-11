@@ -10,7 +10,8 @@ import { createHash } from 'node:crypto';
 import nodeFs from 'node:fs';
 import path from 'node:path';
 import { before, describe, it } from 'node:test';
-import { createSnapshot } from '../snapshot.js';
+
+import { createSnapshot } from '../src/snapshot.js';
 import { sourceDir } from './source-dir.js';
 
 const FIXTURE_DIR = path.join(sourceDir, 'fixture', 'binary');
@@ -20,8 +21,8 @@ describe('createSnapshot()', () => {
 
   before(async () => {
     const result = await createSnapshot({
-      fs: nodeFs as unknown as FsApi,
       dir: FIXTURE_DIR,
+      fs: nodeFs as unknown as FsApi,
     });
 
     // round-trip the snapshot through JSON
