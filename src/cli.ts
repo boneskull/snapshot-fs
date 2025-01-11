@@ -7,7 +7,8 @@
  * @see {@link https://npm.im/memfs}
  */
 
-import { writeFile } from 'node:fs/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
+import path from 'node:path';
 import { parseArgs } from 'node:util';
 
 import { createDirectoryJson, createSnapshot } from './index.js';
@@ -50,6 +51,7 @@ async function main(): Promise<void> {
     : await createDirectoryJson({ dir, root });
 
   if (dest) {
+    await mkdir(path.dirname(dest), { recursive: true });
     await writeFile(dest, output, 'utf-8');
     console.error(
       '[INFO] Wrote %s of %s to %s',
