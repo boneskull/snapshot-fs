@@ -10,7 +10,7 @@ To that end, the `snapshot-fs` package ships a CLI, `snapshot-fs`, which convert
 
 ## Install
 
-**`snapshot-fs` requires Node.js v20.0.0 or newer.**
+**`snapshot-fs` requires Node.js v22.3.0 or newer.**
 
 `snapshot-fs` can be run via `npx snapshot-fs` or installed globally via `npm install -g snapshot-fs`. Or however else you want to consume it.
 
