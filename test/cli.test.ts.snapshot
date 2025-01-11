@@ -1,0 +1,11 @@
+exports[`snapshot-fs cli > --help > should print help 1`] = `
+"snapshot-fs [options..] <dir> [dest.json]\\n\\n  Writes a DirectoryJSON object or snapshot\\n  (with --binary flag) to file. For use with memfs\\n\\n  Options:\\n\\n    --binary/-b     - Output memfs JSON snapshot\\n    --root/-r       - DirectoryJSON root (default: /)\\n    --help/-h       - Show this help message"
+`;
+
+exports[`snapshot-fs cli > when no output filepath provided > should print to stdout 1`] = `
+"{\\n  \\"/README.md\\": \\"This fixture contains this \`README.md\` file\\\\n\\"\\n}"
+`;
+
+exports[`snapshot-fs cli > when output path provided > should write to file 1`] = `
+"{\\n  \\"/README.md\\": \\"This fixture contains this \`README.md\` file\\\\n\\"\\n}"
+`;
