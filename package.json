@@ -32,8 +32,7 @@
   },
   "types": "./dist/commonjs/index.d.ts",
   "files": [
-    "dist",
-    "!dist/*/test"
+    "dist"
   ],
   "keywords": [
     "memfs",
