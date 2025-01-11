@@ -9,9 +9,9 @@ import { memfs } from 'memfs';
 import { type FsApi, type FsPromisesApi } from 'memfs/lib/node/types/index.js';
 import {
   fromJsonSnapshot,
-  toJsonSnapshot,
   type JsonUint8Array,
   type SnapshotNode,
+  toJsonSnapshot,
 } from 'memfs/lib/snapshot/index.js';
 import { type Volume } from 'memfs/lib/volume.js';
 import nodeFs from 'node:fs';
