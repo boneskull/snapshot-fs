@@ -10,7 +10,7 @@
   "author": "Christopher Hiller <boneskull@boneskull.com>",
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=20.0.0"
+    "node": "^22.3.0"
   },
   "bin": {
     "snapshot-fs": "dist/esm/cli.js"
