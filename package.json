@@ -65,7 +65,7 @@
   "dependencies": {
     "glob": "11.0.0",
     "is-binary-path": "2.1.0",
-    "memfs": "4.15.3"
+    "memfs": "4.16.0"
   },
   "devDependencies": {
     "@commitlint/cli": "19.6.1",
