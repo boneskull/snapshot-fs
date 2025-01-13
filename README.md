@@ -6,11 +6,18 @@
 
 I wanted something to help convert directories of test fixtures on-disk to a format usable by an in-memory filesystem ([memfs][]).
 
-To that end, the `snapshot-fs` package ships a CLI, `snapshot-fs`, which converts a directory tree to a `DirectoryJSON` object (or [JSON snapshot](https://github.com/streamich/memfs/blob/master/docs/snapshot/index.md)) for use with `memfs`.
+To that end, the `snapshot-fs` package ships a CLI, `snapshot-fs`, which converts a directory tree to a `DirectoryJSON` object (or [_JSON snapshot_](https://github.com/streamich/memfs/blob/master/docs/snapshot/index.md)) for use with `memfs`.
+
+## 🎁 _New in v2.0.0_
+
+- The command-line options have changed; see [Usage](#usage) below.
+- `snapshot-fs` can now re-create a directory on the filesystem from a _JSON snapshot_.
+- `loadSnapshot()` is now `readSnapshot()`
+- Export functionality exposed via `exportSnapshot()`
 
 ## Install
 
-**`snapshot-fs` requires Node.js v22.3.0 or newer.**
+**`snapshot-fs` requires Node.js v22.13.0 or newer.**
 
 `snapshot-fs` can be run via `npx snapshot-fs` or installed globally via `npm install -g snapshot-fs`. Or however else you want to consume it.
 
@@ -19,25 +26,49 @@ To that end, the `snapshot-fs` package ships a CLI, `snapshot-fs`, which convert
 ## Usage
 
 ```text
-  snapshot-fs [options..] <dir> [dest.json]
+snapshot-fs [dest]
 
-  Writes a DirectoryJSON object or snapshot
-  (with --binary flag) to file. For use with memfs
+Create JSON snapshot of directory
 
-  Options:
+Commands:
+  snapshot-fs create [dest]             Create JSON snapshot of directory
+                                                                       [default]
+  snapshot-fs export <snapshot> [dest]  Export an existing snapshot to the files
+                                        ystem
 
-    --binary/-b     - Output memfs JSON snapshot
-    --root/-r       - DirectoryJSON root (default: /)
-    --help/-h       - Show this help message
+Positionals:
+  dest  Output .json file; if omitted, written to stdout                [string]
+
+Options:
+      --version    Show version number                                 [boolean]
+      --help       Show help                                           [boolean]
+  -b, --binary     Output a memfs JSON snapshot instead of DirectoryJSON
+                                                                       [boolean]
+  -d, --dir        Directory to read from
+                                   [string] [default: Current working directory]
+  -r, --json-root  DirectoryJSON root                    [string] [default: "/"]
+
+For more information, visit https://github.com/boneskull/snapshot-fs
+
 ```
 
-If `dest.json` is not provided, the output will be written to `stdout`.
+When run without a subcommand, `create` will be invoked.
 
-### Typical Example
+### `create` w/ `DirectoryJSON`
+
+If you aren't working with binary files and your directories are small, `DirectoryJSON` is good enough.
 
 ```sh
-snapshot-fs /some/dir /path/to/output.json
+snapshot-fs --dir /some/dir /path/to/output.json
 ```
+
+or:
+
+```sh
+snapshot-fs create --dir /some/dir /path/to/output.json
+```
+
+In your code, you can use the resulting file:
 
 ```js
 import { memfs } from 'memfs';
@@ -55,26 +86,31 @@ console.log(vol.toTree());
 // ... do your thing
 ```
 
-### Binary File Example
+### `create` w/ JSON Snapshots
 
-[memfs][]'s snapshots support binary files, but the `DirectoryJSON` format does not. If you need to support binary files, use the `--binary` flag. This creates a JSON _snapshot_ (for the curious, it's encoded as ["Compact JSON"](https://jsonjoy.com/specs/compact-json)) and must be consumed differently.
+[memfs][]'s `DirectoryJSON` format doesn't support binary files. If you need to support binary files—or you're interested in re-exporting back to the filesystem later—use the `--binary` flag. This creates a JSON _snapshot_ (for the curious, it's encoded as ["Compact JSON"](https://jsonjoy.com/specs/compact-json)) and must be consumed differently.
 
 > [!NOTE]
 > The resulting JSON is for machines.
 
 ```sh
-snapshot-fs --binary /some/dir /path/to/output.json
+snapshot-fs create --binary --dir /some/dir /path/to/output.json
 ```
+
+Here's an example of using the result:
 
 ```js
 import { readFile } from 'node:fs/promises';
 import { fromJsonSnapshot } from 'memfs/lib/snapshot/index.js';
 
-/** @type {string} */
-const snapshotJson = await readFile('/path/to/output.json', 'utf8');
+/**
+ * @import {SnapshotNode} from 'memfs/lib/snapshot/types.js';
+ * @import {JsonUint8Array} from 'memfs/lib/snapshot/index.js';
+ */
 
-/** @type {UInt8Array} */
-const snapshot = new TextEncoder().encode(snapshotJson);
+const snapshotJson = /** @type {JsonUint8Array<SnapshotNode>} */ (
+  await readFile('/path/to/output.json') // read as a Buffer!
+);
 
 const { vol } = memfs();
 
@@ -83,25 +119,47 @@ const { vol } = memfs();
 await fromJsonSnapshot(snapshot, { fs: vol.promises, path: '/' });
 ```
 
-Alternatively, `snapshot-fs` exports `loadSnapshot()`, which does the equivalent of the above:
+### `export`
 
-```js
-import { readFile } from 'node:fs/promises';
-import { loadSnapshot } from 'snapshot-fs';
-import { type Volume } from 'memfs';
+This allows you to re-create a directory on the filesystem from a _JSON snapshot_. Handy!
 
-/** @type {string} */
-const snapshotJson = await readFile('/path/to/output.json', 'utf8');
+```text
+snapshot-fs export <snapshot> [dest]
 
-const vol: Volume = await loadSnapshot(snapshotJson);
+Export an existing snapshot to the filesystem
 
-// or, if you already have a Volume
-const {vol: myVol} = memfs(); // <!-- your volume from elsewhere
+Positionals:
+  snapshot  Path to snapshot .json file                      [string] [required]
+  dest      Destination directory  [string] [default: Current working directory]
 
-// using a different root path
-await loadSnapshot(snapshotJson, { fs: myVol, path: '/some/other/path' });
-
+Options:
+  --version  Show version number                                       [boolean]
+  --help     Show help                                                 [boolean]
 ```
+
+If you have a _JSON snapshot_ (_not_ `DirectoryJSON`) and you want to re-create snapshot on the filesystem, use the `export` subcommand:
+
+```sh
+snapshot-fs export /path/to/snapshot.json /path/to/output
+```
+
+The destination directory will be created if it doesn't exist.
+
+Careful with this one!
+
+## API
+
+`snapshot-fs` exports both ESM and CJS modules.
+
+Some potentially-useful stuff exported from `snapshot-fs`:
+
+- `createSnapshot()` - Create a JSON snapshot from a real or virtual FS
+- `createDirectoryJson()` - Create a `DirectoryJSON` object from a real or virtual FS; warns if a binary file is detected
+- `readSnapshot()` - Read a snapshot from a file and load it into a real or virtual FS
+- `exportSnapshot()` - Alias for `readSnapshot()` defaulting to the real FS
+- `isCompactJson()` - Type guard to check if a `Uint8Array` is a Compact JSON snapshot
+
+See the typings for more information.
 
 ## License
 

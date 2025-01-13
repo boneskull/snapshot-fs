@@ -7,10 +7,11 @@
     "type": "git",
     "url": "git+https://github.com/boneskull/snapshot-fs.git"
   },
+  "homepage": "https://github.com/boneskull/snapshot-fs",
   "author": "Christopher Hiller <boneskull@boneskull.com>",
   "license": "Apache-2.0",
   "engines": {
-    "node": "^22.3.0"
+    "node": "^22.13.0"
   },
   "bin": {
     "snapshot-fs": "dist/esm/cli.js"
@@ -59,13 +60,14 @@
     "lint:deps": "knip",
     "lint:sources": "eslint .",
     "prepare": "husky; npm run build",
-    "test": "node --import tsx --test \"./src/test/*.spec.ts\"",
+    "test": "node --import tsx --test \"./test/*.test.ts\"",
     "test:update": "npm run test -- --test-update-snapshots"
   },
   "dependencies": {
     "glob": "11.0.1",
     "is-binary-path": "2.1.0",
-    "memfs": "4.17.0"
+    "memfs": "4.17.0",
+    "yargs": "17.7.2"
   },
   "devDependencies": {
     "@commitlint/cli": "19.6.1",
@@ -73,9 +75,9 @@
     "@eslint/js": "9.18.0",
     "@stylistic/eslint-plugin-js": "2.12.1",
     "@stylistic/eslint-plugin-ts": "2.12.1",
-    "@tsconfig/node20": "20.1.4",
     "@types/eslint__js": "8.42.3",
     "@types/node": "22.10.5",
+    "@types/yargs": "17.0.33",
     "c8": "10.1.3",
     "eslint": "9.18.0",
     "eslint-plugin-jsonc": "2.18.2",

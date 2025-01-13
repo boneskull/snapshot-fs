@@ -7,9 +7,9 @@ import path from 'node:path';
 import { before, describe, it } from 'node:test';
 
 import { createDirectoryJson } from '../src/directory-json.js';
-import { sourceDir } from './source-dir.js';
+import { testRoot } from './test-root.js';
 
-const FIXTURE_DIR = path.join(sourceDir, 'fixture', 'text');
+const FIXTURE_DIR = path.join(testRoot, 'fixture', 'text');
 
 describe('createDirectoryJson()', () => {
   const { vol } = memfs();
@@ -20,8 +20,6 @@ describe('createDirectoryJson()', () => {
       fs: nodeFs as unknown as FsApi,
     });
     vol.fromJSON(JSON.parse(result) as DirectoryJSON, '/');
-
-    console.log(vol.toTree());
   });
 
   it('should clone text files', async () => {
