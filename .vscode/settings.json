@@ -8,7 +8,7 @@
   "prettier.useEditorConfig": true,
   "files.insertFinalNewline": false,
   "editor.formatOnSave": true,
-  "eslint.experimental.useFlatConfig": true,
+  "eslint.useFlatConfig": true,
   "typescript.tsdk": "node_modules/typescript/lib",
   "nodejs-testing.exclude": ["**/node_modules/**", "**/dist/**"],
   "nodejs-testing.extensions": [
@@ -18,6 +18,8 @@
     }
   ],
   "search.exclude": {
-    ".tshy-build*": true
-  }
+    ".tshy-build*": true,
+    ".tshy": true
+  },
+  "files.exclude": {}
 }
