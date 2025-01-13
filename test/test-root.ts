@@ -3,4 +3,4 @@
 import { fileURLToPath } from 'url';
 
 // @ts-ignore - for tshy
-export const sourceDir = fileURLToPath(new URL('.', import.meta.url));
+export const testRoot = fileURLToPath(new URL('.', import.meta.url));

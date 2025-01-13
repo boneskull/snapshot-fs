@@ -1,5 +1,4 @@
 import { memfs } from 'memfs';
-import { type FsApi } from 'memfs/lib/node/types/index.js';
 import {
   fromJsonSnapshot,
   type JsonUint8Array,
@@ -12,9 +11,9 @@ import path from 'node:path';
 import { before, describe, it } from 'node:test';
 
 import { createSnapshot } from '../src/snapshot.js';
-import { sourceDir } from './source-dir.js';
+import { testRoot } from './test-root.js';
 
-const FIXTURE_DIR = path.join(sourceDir, 'fixture', 'binary');
+const FIXTURE_DIR = path.join(testRoot, 'fixture', 'binary');
 
 describe('createSnapshot()', () => {
   const { vol } = memfs();
@@ -22,7 +21,7 @@ describe('createSnapshot()', () => {
   before(async () => {
     const result = await createSnapshot({
       dir: FIXTURE_DIR,
-      fs: nodeFs as unknown as FsApi,
+      fs: nodeFs,
     });
 
     // round-trip the snapshot through JSON

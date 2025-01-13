@@ -6,10 +6,10 @@ import path from 'node:path';
 import { before, describe, it } from 'node:test';
 import { promisify } from 'node:util';
 
-import { sourceDir } from './source-dir.js';
+import { testRoot } from './test-root.js';
 
-const CLI_PATH = path.join(sourceDir, '..', 'cli.ts');
-const FIXTURE_DIR = path.join(sourceDir, 'fixture', 'text');
+const CLI_PATH = path.join(testRoot, '..', 'src', 'cli.ts');
+const FIXTURE_DIR = path.join(testRoot, 'fixture', 'text');
 
 const execAsync = promisify(exec);
 
@@ -32,7 +32,7 @@ async function execCli(...args: string[]) {
 describe('snapshot-fs cli', () => {
   describe('when no output filepath provided', () => {
     it('should print to stdout', async (t) => {
-      const { stdout: actual } = await execCli(FIXTURE_DIR);
+      const { stdout: actual } = await execCli('--dir', FIXTURE_DIR);
       t.assert.snapshot(actual);
     });
   });
@@ -45,7 +45,7 @@ describe('snapshot-fs cli', () => {
     before(async () => {
       dir = await mkdtemp(path.join(tmpdir(), 'snapshot-fs-'));
       dest = path.join(dir, 'snapshot.json');
-      result = await execCli(FIXTURE_DIR, dest);
+      result = await execCli('--dir', FIXTURE_DIR, dest);
     });
 
     it('should not print to stdout', async () => {
@@ -68,9 +68,14 @@ describe('snapshot-fs cli', () => {
     });
   });
 
-  describe('--root', () => {
+  describe('--json-root', () => {
     it('should set the root of the DirectoryJSON output', async () => {
-      const { stdout: actual } = await execCli(FIXTURE_DIR, '--root', '/foo');
+      const { stdout: actual } = await execCli(
+        '--dir',
+        FIXTURE_DIR,
+        '--json-root',
+        '/foo',
+      );
       const json = JSON.parse(actual) as object;
 
       deepEqual(json, {
