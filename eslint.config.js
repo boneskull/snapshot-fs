@@ -118,6 +118,12 @@ export default tseslint.config(
     },
   },
   {
+    files: ['src/cli.ts'],
+    rules: {
+      'n/hashbang': 'off',
+    },
+  },
+  {
     files: ['test/**/*.test.ts'],
     rules: {
       '@typescript-eslint/no-floating-promises': 'off',
