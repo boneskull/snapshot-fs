@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.0.0](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v1.0.7...snapshot-fs-v2.0.0) (2025-01-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* This drops support for Node.js v20.x.
+
+### Bug Fixes
+
+* **deps:** update dependency glob to v11.0.1 ([#246](https://github.com/boneskull/snapshot-fs/issues/246)) ([d39151d](https://github.com/boneskull/snapshot-fs/commit/d39151d20288fc22fb6b5401e7734b21933623a1))
+* **deps:** update dependency memfs to v4.16.0 ([#244](https://github.com/boneskull/snapshot-fs/issues/244)) ([a0cae77](https://github.com/boneskull/snapshot-fs/commit/a0cae77c365401bbca8d6480c0be7a11b13a205b))
+* **deps:** update dependency memfs to v4.17.0 ([#245](https://github.com/boneskull/snapshot-fs/issues/245)) ([cdb8012](https://github.com/boneskull/snapshot-fs/commit/cdb8012ae23eec54b8cc05b91a0c305996d69404))
+* mkdir output file ([2007348](https://github.com/boneskull/snapshot-fs/commit/200734867daf1a0bf142efe3ec660f1da5d6f118)), closes [#223](https://github.com/boneskull/snapshot-fs/issues/223)
+
+
+### Miscellaneous Chores
+
+* drop support for Node.js v20 ([aaaa6d9](https://github.com/boneskull/snapshot-fs/commit/aaaa6d97ef7d3c99516095bb676d8d2e1d63241d))
+
 ## [1.0.7](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v1.0.6...snapshot-fs-v1.0.7) (2025-01-06)
 
 
