@@ -2,7 +2,7 @@
 
 > Create a snapshot of a directory for use with `memfs`
 >
-> [!snapshot-fs logo](./assets/logo-128.png)
+> ![snapshot-fs logo](https://github.com/boneskull/snapshot-fs/raw/main/assets/logo-128.png)
 
 ## About
 
