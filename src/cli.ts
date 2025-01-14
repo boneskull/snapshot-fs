@@ -60,7 +60,6 @@ async function main(): Promise<void> {
             'json-root': {
               alias: 'r',
               coerce: path.posix.normalize,
-              default: '/',
               description: 'DirectoryJSON root',
               nargs: 1,
               requiresArg: true,
