@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v2.0.0...snapshot-fs-v3.0.0) (2025-01-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* **export:** Node.js v22.13.0 is now the minimum version. The CLI commands have changed.
+
+### Features
+
+* **export:** add export subcommand ([74bb944](https://github.com/boneskull/snapshot-fs/commit/74bb9444d546444ae5506758ba240d73fc5cffb8)), closes [#224](https://github.com/boneskull/snapshot-fs/issues/224)
+
 ## [2.0.0](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v1.0.7...snapshot-fs-v2.0.0) (2025-01-13)
 
 
