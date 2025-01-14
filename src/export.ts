@@ -1,26 +1,23 @@
-import { type JsonUint8Array } from 'memfs/lib/snapshot/json.js';
-import { type SnapshotNode } from 'memfs/lib/snapshot/types.js';
 import nodeFs from 'node:fs';
 
 import { readSnapshot, type ReadSnapshotOptions } from './read.js';
-import { type FsApi } from './snapshot.js';
 
 /**
  * Options for {@link exportSnapshot}
  */
-export type ExportSnapshotOptions = ReadSnapshotOptions;
+export type ExportSnapshotOptions = Pick<ReadSnapshotOptions, 'dir'>;
 
 /**
- * Exports a snapshot to the filesystem, using the _real_ filesystem by default.
+ * Exports a snapshot to the _real_ filesystem.
  *
- * @param snapshotJson Snapshot in binary format
+ * @param snapshot Snapshot in binary format
  * @param options Options
  * @returns Filesystem object
  */
 export async function exportSnapshot(
-  snapshotJson: JsonUint8Array<SnapshotNode>,
-  { dir = process.cwd(), fs = nodeFs }: ExportSnapshotOptions,
-): Promise<FsApi> {
-  await fs.promises.mkdir(dir, { recursive: true });
-  return readSnapshot(snapshotJson, { dir, fs });
+  snapshot: Uint8Array,
+  { dir = process.cwd() }: ExportSnapshotOptions,
+): Promise<void> {
+  await nodeFs.promises.mkdir(dir, { recursive: true });
+  await readSnapshot(snapshot, { dir, fs: nodeFs });
 }

@@ -20,12 +20,12 @@ import {
   createDirectoryJson,
   createSnapshot,
   exportSnapshot,
-  isCompactJson,
 } from './index.js';
 
 async function main(): Promise<void> {
   await yargs(hideBin(process.argv))
     .version()
+    .strict()
     .help()
     .scriptName('snapshot-fs')
     .epilog(
@@ -76,8 +76,8 @@ async function main(): Promise<void> {
           await mkdir(path.dirname(dest), { recursive: true });
           await writeFile(dest, output, 'utf-8');
           console.error(
-            '[INFO] Wrote %s of %s to %s',
-            binary ? 'snapshot' : 'DirectoryJSON',
+            '[INFO] Wrote %s snapshot of %s to %s',
+            binary ? 'Compact JSON' : 'DirectoryJSON',
             dir,
             dest,
           );
@@ -93,7 +93,7 @@ async function main(): Promise<void> {
         yargs
           .positional('snapshot', {
             demandOption: true,
-            describe: 'Path to snapshot .json file',
+            describe: 'Path to snapshot file',
             normalize: true,
           })
           .positional('dest', {
@@ -104,11 +104,6 @@ async function main(): Promise<void> {
           }),
       async ({ dest, snapshot }) => {
         const value = await nodeFs.promises.readFile(snapshot);
-        if (!isCompactJson(value)) {
-          throw new TypeError(
-            `${snapshot} is not a valid snapshot; it must be in Compact JSON format (created with the --binary flag)`,
-          );
-        }
         await exportSnapshot(value, { dir: dest });
         console.error(
           '[INFO] Exported %s to %s',
