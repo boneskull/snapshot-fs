@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.1](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v3.1.0...snapshot-fs-v3.1.1) (2025-01-14)
+
+
+### Bug Fixes
+
+* **readme:** fix logo link ([e676ad7](https://github.com/boneskull/snapshot-fs/commit/e676ad7747e61d56970cdeb5b44fe1224d12cce7))
+
 ## [3.1.0](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v3.0.0...snapshot-fs-v3.1.0) (2025-01-14)
 
 
