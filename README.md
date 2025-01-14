@@ -123,7 +123,7 @@ await fromJsonSnapshot(snapshot, { fs: vol.promises, path: '/' });
 
 ### `export`
 
-This allows you to re-create a directory on the filesystem from a _JSON snapshot_. Handy!
+This allows you to re-create a directory on the filesystem from a snapshot. Handy!
 
 ```text
 snapshot-fs export <snapshot> [dest]
@@ -139,7 +139,7 @@ Options:
   --help     Show help                                                 [boolean]
 ```
 
-If you have a _JSON snapshot_ (_not_ `DirectoryJSON`) and you want to re-create snapshot on the filesystem, use the `export` subcommand:
+If you have a snapshot (either format) and you want to re-create snapshot on the filesystem, use the `export` subcommand:
 
 ```sh
 snapshot-fs export /path/to/snapshot.json /path/to/output
