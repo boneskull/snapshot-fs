@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.1.0](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v3.0.0...snapshot-fs-v3.1.0) (2025-01-14)
+
+
+### Features
+
+* **export:** support DirectoryJSON exports ([07fb5c4](https://github.com/boneskull/snapshot-fs/commit/07fb5c4e7b92784a1f68ed4fdb37946607784972))
+
+
+### Bug Fixes
+
+* **cli:** fix unrunnable CLI with binary flag ([55a0788](https://github.com/boneskull/snapshot-fs/commit/55a0788bd27062ae048da763b1dcf158ce0c30af))
+
 ## [3.0.0](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v2.0.0...snapshot-fs-v3.0.0) (2025-01-14)
 
 
