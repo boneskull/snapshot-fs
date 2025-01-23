@@ -37,8 +37,8 @@ async function main(): Promise<void> {
       (yargs) =>
         yargs
           .positional('dest', {
+            coerce: path.resolve,
             describe: 'Output .json file; if omitted, written to stdout',
-            normalize: true,
           })
           .options({
             binary: {
@@ -53,7 +53,6 @@ async function main(): Promise<void> {
               defaultDescription: 'Current working directory',
               describe: 'Directory to read from',
               nargs: 1,
-              normalize: true,
               requiresArg: true,
               type: 'string',
             },
@@ -88,28 +87,24 @@ async function main(): Promise<void> {
     )
     .command(
       'export <snapshot> [dest]',
-      'Export an existing snapshot to the filesystem',
+      'Export a JSON snapshot to the filesystem',
       (yargs) =>
         yargs
           .positional('snapshot', {
+            coerce: path.resolve,
             demandOption: true,
             describe: 'Path to snapshot file',
-            normalize: true,
           })
           .positional('dest', {
+            coerce: path.resolve,
             default: process.cwd(),
             defaultDescription: 'Current working directory',
             describe: 'Destination directory',
-            normalize: true,
           }),
       async ({ dest, snapshot }) => {
         const value = await nodeFs.promises.readFile(snapshot);
         await exportSnapshot(value, { dir: dest });
-        console.error(
-          '[INFO] Exported %s to %s',
-          path.relative(process.cwd(), snapshot),
-          path.relative(process.cwd(), dest),
-        );
+        console.error('[INFO] Exported %s to %s', snapshot, dest);
       },
     )
     .options({})

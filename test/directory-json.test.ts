@@ -7,9 +7,9 @@ import path from 'node:path';
 import { before, describe, it } from 'node:test';
 
 import { createDirectoryJson } from '../src/directory-json.js';
-import { testRoot } from './test-root.js';
+import { TEST_ROOT } from './test-root.js';
 
-const FIXTURE_DIR = path.join(testRoot, 'fixture', 'text');
+const FIXTURE_DIR = path.join(TEST_ROOT, 'fixture', 'text');
 
 describe('createDirectoryJson()', () => {
   const { vol } = memfs();
