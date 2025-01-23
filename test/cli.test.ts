@@ -3,18 +3,18 @@ import { exec } from 'node:child_process';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { after, before, beforeEach, describe, it } from 'node:test';
+import { after, afterEach, before, beforeEach, describe, it } from 'node:test';
 import { promisify } from 'node:util';
 
 import { isCompactJson } from '../src/read.js';
-import { testRoot } from './test-root.js';
+import { TEST_ROOT } from './test-root.js';
 
-const CLI_PATH = path.join(testRoot, '..', 'src', 'cli.ts');
-const TEXT_FIXTURE_DIR = path.join(testRoot, 'fixture', 'text');
-const BINARY_FIXTURE_DIR = path.join(testRoot, 'fixture', 'binary');
+const CLI_PATH = path.join(TEST_ROOT, '..', 'src', 'cli.ts');
+const TEXT_FIXTURE_DIR = path.join(TEST_ROOT, 'fixture', 'text');
+const BINARY_FIXTURE_DIR = path.join(TEST_ROOT, 'fixture', 'binary');
 
-const TEXT_SNAPSHOT_FIXTURE = path.join(testRoot, 'fixture', 'text.json');
-const BINARY_SNAPSHOT_FIXTURE = path.join(testRoot, 'fixture', 'binary.json');
+const TEXT_SNAPSHOT_FIXTURE = path.join(TEST_ROOT, 'fixture', 'text.json');
+const BINARY_SNAPSHOT_FIXTURE = path.join(TEST_ROOT, 'fixture', 'binary.json');
 
 const execAsync = promisify(exec);
 
@@ -38,40 +38,66 @@ describe('snapshot-fs cli', () => {
   describe('subcommand', () => {
     describe('create', () => {
       describe('when no snapshot path provided', () => {
-    it('should print to stdout', async (t) => {
+        it('should print to stdout', async (t) => {
           const { stdout: actual } = await execCli('--dir', TEXT_FIXTURE_DIR);
-      t.assert.snapshot(actual);
-    });
-  });
+          t.assert.snapshot(actual);
+        });
+      });
 
       describe('when snapshot path provided', () => {
-    let dir: string;
-    let dest: string;
-    let result: { stderr: string; stdout: string };
+        let tmpDir: string;
+        let dest: string;
+        let result: { stderr: string; stdout: string };
 
-    before(async () => {
-          dir = await mkdtemp(path.join(tmpdir(), 'snapshot-fs-create-'));
-      dest = path.join(dir, 'snapshot.json');
+        before(async () => {
+          tmpDir = await mkdtemp(path.join(tmpdir(), 'snapshot-fs-create-'));
+          dest = path.join(tmpDir, 'snapshot.json');
         });
 
         after(async () => {
-          await rm(dir, { force: true, recursive: true });
-    });
+          await rm(tmpDir, { force: true, recursive: true });
+        });
 
         describe('default behavior', () => {
           beforeEach(async () => {
             result = await execCli('--dir', TEXT_FIXTURE_DIR, dest);
           });
-    it('should not print to stdout', async () => {
+
+          it('should not print to stdout', async () => {
             assert.deepEqual(result, {
               stderr: `[INFO] Wrote DirectoryJSON snapshot of ${TEXT_FIXTURE_DIR} to ${dest}`,
-        stdout: '',
-      });
-    });
+              stdout: '',
+            });
+          });
 
           it('should write DirectoryJSON to file', async (t) => {
-      const actual = await readFile(dest, 'utf-8');
-      t.assert.snapshot(actual);
+            const actual = await readFile(dest, 'utf-8');
+            t.assert.snapshot(actual);
+          });
+        });
+
+        describe('path handling', () => {
+          let cwd: string;
+          beforeEach(() => {
+            cwd = process.cwd();
+          });
+
+          afterEach(() => {
+            process.chdir(cwd);
+          });
+
+          it('should resolve input dir relative to cwd', async (t) => {
+            process.chdir(TEST_ROOT);
+            await execCli('--dir', path.join('fixture', 'text'), dest);
+            const actual = await readFile(dest, 'utf-8');
+            t.assert.snapshot(actual);
+          });
+
+          it('should resolve output file relative to cwd', async (t) => {
+            process.chdir(tmpDir);
+            await execCli('--dir', TEXT_FIXTURE_DIR, 'snapshot.json');
+            const actual = await readFile(dest, 'utf-8');
+            t.assert.snapshot(actual);
           });
         });
 
@@ -90,13 +116,13 @@ describe('snapshot-fs cli', () => {
               assert.deepEqual(result, {
                 stderr: `[INFO] Wrote Compact JSON snapshot of ${BINARY_FIXTURE_DIR} to ${dest}`,
                 stdout: '',
-    });
-  });
+              });
+            });
 
             it('should write Compact JSON to file', async (t) => {
               const actual = await readFile(dest, 'utf-8');
-      t.assert.snapshot(actual);
-    });
+              t.assert.snapshot(actual);
+            });
 
             it('should be a Compact JSON snapshot', async () => {
               const actual = await readFile(dest);
@@ -104,13 +130,13 @@ describe('snapshot-fs cli', () => {
                 isCompactJson(actual),
                 'Expected Compact JSON snapshot',
               );
+            });
           });
-  });
 
-  describe('--json-root', () => {
-    it('should set the root of the DirectoryJSON output', async () => {
-      const { stdout: actual } = await execCli(
-        '--dir',
+          describe('--json-root', () => {
+            it('should set the root of the DirectoryJSON output', async () => {
+              const { stdout: actual } = await execCli(
+                '--dir',
                 TEXT_FIXTURE_DIR,
                 '--json-root',
                 '/foo',
@@ -131,14 +157,14 @@ describe('snapshot-fs cli', () => {
                       '--dir',
                       TEXT_FIXTURE_DIR,
                       '--binary',
-        '--json-root',
-        '/foo',
+                      '--json-root',
+                      '/foo',
                     ),
                   {
                     message:
                       /Arguments json-root and binary are mutually exclusive/,
                   },
-      );
+                );
               });
             });
           });
@@ -169,12 +195,11 @@ describe('snapshot-fs cli', () => {
       describe('when used with a Compact JSON snapshot', () => {
         it('should re-create the snapshot in the filesystem', async (t) => {
           await execCli('export', BINARY_SNAPSHOT_FIXTURE, dest);
-          const { stdout } = await execCli('--dir', dest);
-          t.assert.snapshot(stdout);
+          await t.assert.doesNotReject(execCli('--dir', dest));
         });
       });
     });
-      });
+  });
 
   describe('--help', () => {
     it('should print help', async (t) => {

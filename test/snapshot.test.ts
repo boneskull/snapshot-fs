@@ -11,9 +11,9 @@ import path from 'node:path';
 import { before, describe, it } from 'node:test';
 
 import { createSnapshot } from '../src/snapshot.js';
-import { testRoot } from './test-root.js';
+import { TEST_ROOT } from './test-root.js';
 
-const FIXTURE_DIR = path.join(testRoot, 'fixture', 'binary');
+const FIXTURE_DIR = path.join(TEST_ROOT, 'fixture', 'binary');
 
 describe('createSnapshot()', () => {
   const { vol } = memfs();
