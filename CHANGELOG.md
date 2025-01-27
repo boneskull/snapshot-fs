@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.2](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v3.1.1...snapshot-fs-v3.1.2) (2025-01-27)
+
+
+### Bug Fixes
+
+* relative path handling ([ac57693](https://github.com/boneskull/snapshot-fs/commit/ac5769383d3cc06a28072651dc8c92998fa68daf))
+
 ## [3.1.1](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v3.1.0...snapshot-fs-v3.1.1) (2025-01-14)
 
 
