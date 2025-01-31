@@ -67,13 +67,20 @@ async function main(): Promise<void> {
           })
           .conflicts('json-root', 'binary'),
       async ({ binary, dest, dir, jsonRoot }) => {
-        const output: string = binary
+        const output = binary
           ? await createSnapshot({ dir })
           : await createDirectoryJson({ dir, root: jsonRoot });
 
         if (dest) {
           await mkdir(path.dirname(dest), { recursive: true });
-          await writeFile(dest, output, 'utf-8');
+
+          await writeFile(
+            dest,
+            typeof output === 'string'
+              ? output
+              : new TextDecoder().decode(output),
+            'utf-8',
+          );
           console.error(
             '[INFO] Wrote %s snapshot of %s to %s',
             binary ? 'Compact JSON' : 'DirectoryJSON',

@@ -25,7 +25,7 @@ describe('createSnapshot()', () => {
     });
 
     // round-trip the snapshot through JSON
-    const json = result.toString();
+    const json = new TextDecoder().decode(result);
 
     const snapshot = new TextEncoder().encode(
       json,
