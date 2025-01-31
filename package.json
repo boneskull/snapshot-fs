@@ -65,7 +65,6 @@
     "test:update": "node --import tsx --test --test-update-snapshots \"./test/*.test.ts\""
   },
   "dependencies": {
-    "glob": "11.0.1",
     "is-binary-path": "2.1.0",
     "memfs": "4.17.0",
     "yargs": "17.7.2"
