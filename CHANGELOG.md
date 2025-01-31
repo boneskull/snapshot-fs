@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.0.0](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v3.1.2...snapshot-fs-v4.0.0) (2025-01-31)
+
+
+### ⚠ BREAKING CHANGES
+
+* `createSnapshot()` now resolves with a `JsonUint8Array<SnapshotNode>` value instead of a `string`.
+
+### Bug Fixes
+
+* **deps:** remove direct dependency on glob ([c04c976](https://github.com/boneskull/snapshot-fs/commit/c04c976215af5927596b334955d1a8f35e91dfe6))
+* **deps:** remove direct dependency on is-binary-path ([a4269b8](https://github.com/boneskull/snapshot-fs/commit/a4269b8661176e203d1b98c450c9c88710fb8732))
+* handle symlinks ([56d17b9](https://github.com/boneskull/snapshot-fs/commit/56d17b9247fc09363c3cfbbd77c531299001c181))
+
 ## [3.1.2](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v3.1.1...snapshot-fs-v3.1.2) (2025-01-27)
 
 
