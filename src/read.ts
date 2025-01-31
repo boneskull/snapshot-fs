@@ -26,7 +26,10 @@ export type ReadSnapshotOptions = CreateSnapshotOptions;
 export const isCompactJson = (
   value: Uint8Array,
 ): value is JsonUint8Array<SnapshotNode> => {
-  return ArrayBuffer.isView(value) && value.subarray(0, 1).toString() === '[';
+  return (
+    ArrayBuffer.isView(value) &&
+    new TextDecoder().decode(value.subarray(0, 1)) === '['
+  );
 };
 
 /**

@@ -5,9 +5,19 @@
  * @module snapshot-fs/snapshot
  * @see {@link https://github.com/streamich/memfs/blob/master/docs/snapshot/index.md}
  */
-import { toJsonSnapshot } from 'memfs/lib/snapshot/index.js';
+import {
+  type JsonUint8Array,
+  type SnapshotNode,
+  toJsonSnapshot,
+} from 'memfs/lib/snapshot/index.js';
 import { type Volume } from 'memfs/lib/volume.js';
 import nodeFs from 'node:fs';
+
+/**
+ * All files will be relative to this path in the output
+ * {@link memfs DirectoryJSON} object
+ */
+export const DEFAULT_MEMFS_ROOT = '/';
 
 /**
  * Options for {@link createSnapshot}
@@ -37,11 +47,11 @@ export type FsApi = typeof nodeFs | Volume;
 export async function createSnapshot({
   dir = process.cwd(),
   fs,
-}: CreateSnapshotOptions = {}): Promise<string> {
+}: CreateSnapshotOptions = {}): Promise<JsonUint8Array<SnapshotNode>> {
   const snapshot = await toJsonSnapshot({
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     fs: fs ? fs.promises : (nodeFs.promises as any),
     path: dir,
   });
-  return new TextDecoder().decode(snapshot);
+  return snapshot;
 }
