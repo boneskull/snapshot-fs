@@ -83,7 +83,7 @@
     "eslint-plugin-n": "17.15.1",
     "eslint-plugin-perfectionist": "4.7.0",
     "husky": "9.1.7",
-    "knip": "5.43.5",
+    "knip": "5.43.6",
     "lint-staged": "15.4.3",
     "node-test-github-reporter": "1.2.0",
     "npm-run-all2": "7.0.2",
