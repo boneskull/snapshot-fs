@@ -69,8 +69,8 @@
     "yargs": "17.7.2"
   },
   "devDependencies": {
-    "@commitlint/cli": "19.6.1",
-    "@commitlint/config-conventional": "19.6.0",
+    "@commitlint/cli": "19.7.1",
+    "@commitlint/config-conventional": "19.7.1",
     "@eslint/js": "9.19.0",
     "@stylistic/eslint-plugin-js": "3.0.1",
     "@stylistic/eslint-plugin-ts": "3.0.1",
