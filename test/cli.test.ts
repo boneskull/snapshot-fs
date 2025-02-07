@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+import { memfs } from 'memfs';
 import { exec } from 'node:child_process';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -6,15 +6,19 @@ import path from 'node:path';
 import { after, afterEach, before, beforeEach, describe, it } from 'node:test';
 import { promisify } from 'node:util';
 
-import { isCompactJson } from '../src/read.js';
+import { CBOR_KIND, CJSON_KIND, JSON_KIND, readSnapshot } from '../src/read.js';
 import { TEST_ROOT } from './test-root.js';
 
 const CLI_PATH = path.join(TEST_ROOT, '..', 'src', 'cli.ts');
-const TEXT_FIXTURE_DIR = path.join(TEST_ROOT, 'fixture', 'text');
-const BINARY_FIXTURE_DIR = path.join(TEST_ROOT, 'fixture', 'binary');
+const FIXTURE_DIR = path.join(TEST_ROOT, 'fixture');
+const TEXT_FIXTURE_DIR = path.join(FIXTURE_DIR, 'text');
+const BINARY_FIXTURE_DIR = path.join(FIXTURE_DIR, 'binary');
 
-const TEXT_SNAPSHOT_FIXTURE = path.join(TEST_ROOT, 'fixture', 'text.json');
-const BINARY_SNAPSHOT_FIXTURE = path.join(TEST_ROOT, 'fixture', 'binary.json');
+const FIXTURES = {
+  [CBOR_KIND]: path.join(FIXTURE_DIR, 'snapshot.cbor'),
+  [CJSON_KIND]: path.join(FIXTURE_DIR, 'snapshot.cjson'),
+  [JSON_KIND]: path.join(FIXTURE_DIR, 'snapshot.json'),
+} as const;
 
 const execAsync = promisify(exec);
 
@@ -39,8 +43,11 @@ describe('snapshot-fs cli', () => {
     describe('create', () => {
       describe('when no snapshot path provided', () => {
         it('should print to stdout', async (t) => {
-          const { stdout: actual } = await execCli('--dir', TEXT_FIXTURE_DIR);
-          t.assert.snapshot(actual);
+          const { stdout: actual } = await execCli(
+            '--source',
+            TEXT_FIXTURE_DIR,
+          );
+          t.assert.notEqual(actual, '');
         });
       });
 
@@ -58,20 +65,27 @@ describe('snapshot-fs cli', () => {
           await rm(tmpDir, { force: true, recursive: true });
         });
 
-        describe('default behavior', () => {
+        describe('default behavior w/ source dir', () => {
           beforeEach(async () => {
-            result = await execCli('--dir', TEXT_FIXTURE_DIR, dest);
+            result = await execCli('--source', TEXT_FIXTURE_DIR, dest);
           });
 
-          it('should not print to stdout', async () => {
-            assert.deepEqual(result, {
-              stderr: `[INFO] Wrote DirectoryJSON snapshot of ${TEXT_FIXTURE_DIR} to ${dest}`,
-              stdout: '',
-            });
+          it('should not print to stdout', (t) => {
+            t.assert.equal(result.stdout, '');
           });
 
-          it('should write DirectoryJSON to file', async (t) => {
+          it('should print summary to stderr', (t) => {
+            t.assert.match(
+              result.stderr,
+              new RegExp(
+                `\\[INFO\\] Wrote ${CJSON_KIND.toUpperCase()} snapshot of .+?\\sto\\s.+`,
+              ),
+            );
+          });
+
+          it(`should write a ${CJSON_KIND.toUpperCase()} snapshot`, async (t) => {
             const actual = await readFile(dest, 'utf-8');
+            t.assert.doesNotThrow(() => JSON.parse(actual));
             t.assert.snapshot(actual);
           });
         });
@@ -88,116 +102,120 @@ describe('snapshot-fs cli', () => {
 
           it('should resolve input dir relative to cwd', async (t) => {
             process.chdir(TEST_ROOT);
-            await execCli('--dir', path.join('fixture', 'text'), dest);
+            await execCli('--source', path.join('fixture', 'text'), dest);
             const actual = await readFile(dest, 'utf-8');
             t.assert.snapshot(actual);
           });
 
           it('should resolve output file relative to cwd', async (t) => {
             process.chdir(tmpDir);
-            await execCli('--dir', TEXT_FIXTURE_DIR, 'snapshot.json');
+            await execCli('--source', TEXT_FIXTURE_DIR, 'snapshot.json');
             const actual = await readFile(dest, 'utf-8');
             t.assert.snapshot(actual);
           });
         });
 
         describe('option', () => {
-          describe('--binary', () => {
-            beforeEach(async () => {
-              result = await execCli(
-                '--dir',
-                BINARY_FIXTURE_DIR,
-                '--binary',
-                dest,
-              );
-            });
-
-            it('should not print to stdout', async () => {
-              assert.deepEqual(result, {
-                stderr: `[INFO] Wrote Compact JSON snapshot of ${BINARY_FIXTURE_DIR} to ${dest}`,
-                stdout: '',
+          for (const kind of [CBOR_KIND, CJSON_KIND, JSON_KIND] as const) {
+            describe(`--format=${kind}`, () => {
+              beforeEach(async () => {
+                result = await execCli(
+                  '--source',
+                  BINARY_FIXTURE_DIR,
+                  '--format',
+                  kind,
+                  dest,
+                );
               });
-            });
 
-            it('should write Compact JSON to file', async (t) => {
-              const actual = await readFile(dest, 'utf-8');
-              t.assert.snapshot(actual);
-            });
-
-            it('should be a Compact JSON snapshot', async () => {
-              const actual = await readFile(dest);
-              assert.ok(
-                isCompactJson(actual),
-                'Expected Compact JSON snapshot',
-              );
-            });
-          });
-
-          describe('--json-root', () => {
-            it('should set the root of the DirectoryJSON output', async () => {
-              const { stdout: actual } = await execCli(
-                '--dir',
-                TEXT_FIXTURE_DIR,
-                '--json-root',
-                '/foo',
-              );
-              const json = JSON.parse(actual) as Record<string, string>;
-
-              assert.deepEqual(json, {
-                '/foo/README.md':
-                  'This fixture contains this `README.md` file\n',
+              it('should not print to stdout', (t) => {
+                t.assert.equal(result.stdout, '');
               });
-            });
 
-            describe('when --binary is also provided', () => {
-              it('should fail', async () => {
-                await assert.rejects(
-                  () =>
-                    execCli(
-                      '--dir',
-                      TEXT_FIXTURE_DIR,
-                      '--binary',
-                      '--json-root',
-                      '/foo',
-                    ),
-                  {
-                    message:
-                      /Arguments json-root and binary are mutually exclusive/,
-                  },
+              it('should print summary to stderr', (t) => {
+                t.assert.match(
+                  result.stderr,
+                  new RegExp(
+                    `\\[INFO\\] Wrote ${kind.toUpperCase()} snapshot of .+?\\sto\\s.+`,
+                  ),
+                );
+              });
+
+              it('should write a snapshot to file', async (t) => {
+                const actual = await readFile(dest);
+                t.assert.snapshot(actual, {
+                  serializers: [
+                    (value) => Buffer.from(value).toString('base64'),
+                  ],
+                });
+              });
+
+              it(`should be a ${kind.toUpperCase()} snapshot`, async (t) => {
+                const actual = await readFile(dest);
+                await t.assert.doesNotReject(
+                  readSnapshot(kind, actual as any, { fs: memfs().fs }),
+                  `Expected ${kind} snapshot`,
                 );
               });
             });
-          });
+          }
         });
       });
     });
 
     describe('export', () => {
-      let dir: string;
-      let dest: string;
+      let tempdir: string;
+
       before(async () => {
-        dir = await mkdtemp(path.join(tmpdir(), 'snapshot-fs-export-'));
-        dest = path.join(dir, 'dest');
+        tempdir = await mkdtemp(path.join(tmpdir(), 'snapshot-fs-export-'));
       });
 
       after(async () => {
-        await rm(dir, { force: true, recursive: true });
+        await rm(tempdir, { force: true, recursive: true });
       });
 
-      describe('when used with a DirectoryJSON snapshot', () => {
-        it('should re-create the snapshot in the filesystem', async (t) => {
-          await execCli('export', TEXT_SNAPSHOT_FIXTURE, dest);
-          const { stdout } = await execCli('--dir', dest);
-          t.assert.snapshot(stdout);
-        });
-      });
+      for (const kind of [CBOR_KIND, CJSON_KIND, JSON_KIND] as const) {
+        describe(`--format=${kind}`, () => {
+          it('should export accurate snapshot contents to the filesystem', async (t) => {
+            // this roundtrips a snapshot to a temp dir and back into a snapshot,
+            // then does a deep comparison of the two results.
+            // I am unsure how stable `Volume.toJSON()` is.
+            const expectedSnapshot = FIXTURES[kind];
+            const destdir = path.join(tempdir, `exported-${kind}`);
+            const actualSnapshot = path.join(
+              tempdir,
+              `exported-snapshot.${kind}`,
+            );
 
-      describe('when used with a Compact JSON snapshot', () => {
-        it('should re-create the snapshot in the filesystem', async (t) => {
-          await execCli('export', BINARY_SNAPSHOT_FIXTURE, dest);
-          await t.assert.doesNotReject(execCli('--dir', dest));
+            await execCli(
+              'export',
+              expectedSnapshot,
+              destdir,
+              '--format',
+              kind,
+            );
+            await execCli(
+              '--source',
+              destdir,
+              actualSnapshot,
+              '--format',
+              kind,
+            );
+            const { vol: actualVol } = memfs();
+            const { vol: expectedVol } = memfs();
+            await Promise.all([
+              readSnapshot(kind, await readFile(actualSnapshot), {
+                fs: actualVol,
+              }),
+              readSnapshot(kind, await readFile(expectedSnapshot), {
+                fs: expectedVol,
+              }),
+            ]);
+
+            t.assert.deepEqual(actualVol.toJSON(), expectedVol.toJSON());
+          });
         });
-      });
+      }
     });
   });
 
