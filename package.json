@@ -80,7 +80,7 @@
     "@stylistic/eslint-plugin-js": "3.0.1",
     "@stylistic/eslint-plugin-ts": "3.0.1",
     "@types/eslint__js": "8.42.3",
-    "@types/json-stable-stringify": "1.1.0",
+    "@types/json-stable-stringify": "1.2.0",
     "@types/node": "22.13.1",
     "@types/yargs": "17.0.33",
     "c8": "10.1.3",
