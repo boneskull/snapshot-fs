@@ -118,7 +118,7 @@
     }
   },
   "lint-staged": {
-    "*.{c?ts,c?js,json,md,ya?ml}": [
+    "*.{ts,cts,js,json,md,yml,json5}": [
       "eslint --fix",
       "prettier --write"
     ]
