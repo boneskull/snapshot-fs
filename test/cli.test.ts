@@ -142,8 +142,12 @@ describe('snapshot-fs cli', () => {
               });
 
               it('should write a snapshot to file', async (t) => {
-                const actual = await readFile(dest, 'utf-8');
-                t.assert.snapshot(actual);
+                const actual = await readFile(dest);
+                t.assert.snapshot(actual, {
+                  serializers: [
+                    (value) => Buffer.from(value).toString('base64'),
+                  ],
+                });
               });
 
               it(`should be a ${kind.toUpperCase()} snapshot`, async (t) => {
