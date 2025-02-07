@@ -54,6 +54,7 @@
   "scripts": {
     "build": "tshy",
     "coverage": "c8 --all --include src npm run test",
+    "dev": "tshy --watch",
     "lint": "run-p lint:*",
     "lint-commit": "commitlint",
     "lint-staged": "lint-staged",
@@ -65,7 +66,11 @@
     "test:update": "node --import tsx --test --test-update-snapshots \"./test/*.test.ts\""
   },
   "dependencies": {
+    "@jsonjoy.com/json-pack": "1.1.1",
+    "json-stable-stringify": "1.2.1",
     "memfs": "4.17.0",
+    "supports-color": "10.0.0",
+    "tree-dump": "1.0.2",
     "yargs": "17.7.2"
   },
   "devDependencies": {
@@ -75,6 +80,7 @@
     "@stylistic/eslint-plugin-js": "3.0.1",
     "@stylistic/eslint-plugin-ts": "3.0.1",
     "@types/eslint__js": "8.42.3",
+    "@types/json-stable-stringify": "1.1.0",
     "@types/node": "22.13.1",
     "@types/yargs": "17.0.33",
     "c8": "10.1.3",

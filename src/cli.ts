@@ -10,6 +10,10 @@
  * @see {@link https://npm.im/memfs}
  */
 
+// eslint-disable-next-line n/no-missing-import
+import { type CborUint8Array } from '@jsonjoy.com/json-pack/lib/cbor/index.js';
+import { type JsonUint8Array } from 'memfs/lib/snapshot/json.js';
+import { type SnapshotNode } from 'memfs/lib/snapshot/types.js';
 import nodeFs from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -17,10 +21,17 @@ import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
 import {
-  createDirectoryJson,
-  createSnapshot,
+  CBOR_KIND,
+  CJSON_KIND,
+  createCBORSnapshot,
+  createCJSONSnapshot,
+  createJSONSnapshot,
   exportSnapshot,
+  JSON_KIND,
 } from './index.js';
+
+const GROUP_OUTPUT = 'Output:';
+const GROUP_INPUT = 'Input:';
 
 async function main(): Promise<void> {
   await yargs(hideBin(process.argv))
@@ -31,60 +42,79 @@ async function main(): Promise<void> {
     .epilog(
       `For more information, visit https://github.com/boneskull/snapshot-fs`,
     )
+    .options({
+      separator: {
+        alias: 'sep',
+        choices: ['posix', 'win32'],
+        default: 'posix',
+        describe: 'Path separator',
+        global: true,
+        group: GROUP_OUTPUT,
+      },
+    })
+
+    .middleware((argv) => {
+      argv.separator =
+        argv.separator === 'posix' ? path.posix.sep : path.win32.sep;
+    })
     .command(
       ['$0 [dest]', 'create [dest]'],
-      'Create JSON snapshot of directory',
+      'Create memfs snapshot from filesystem',
       (yargs) =>
         yargs
           .positional('dest', {
             coerce: path.resolve,
-            describe: 'Output .json file; if omitted, written to stdout',
+            describe: 'Path to output file',
           })
           .options({
-            binary: {
-              alias: 'b',
-              describe: 'Output a memfs JSON snapshot instead of DirectoryJSON',
-              type: 'boolean',
+            format: {
+              alias: 'f',
+              choices: [CBOR_KIND, CJSON_KIND, JSON_KIND],
+              default: CJSON_KIND,
+              describe: 'Snapshot format',
+              group: GROUP_OUTPUT,
+              nargs: 1,
+              requiresArg: true,
+              type: 'string',
             },
-            dir: {
-              alias: 'd',
+            source: {
+              alias: 's',
               coerce: path.resolve,
               default: process.cwd(),
-              defaultDescription: 'Current working directory',
-              describe: 'Directory to read from',
+              defaultDescription: '(current directory)',
+              describe: 'File or directory to snapshot',
+              group: GROUP_INPUT,
               nargs: 1,
               requiresArg: true,
               type: 'string',
             },
-            'json-root': {
-              alias: 'r',
-              coerce: path.posix.normalize,
-              description: 'DirectoryJSON root',
-              nargs: 1,
-              requiresArg: true,
-              type: 'string',
-            },
-          })
-          .conflicts('json-root', 'binary'),
-      async ({ binary, dest, dir, jsonRoot }) => {
-        const output = binary
-          ? await createSnapshot({ dir })
-          : await createDirectoryJson({ dir, root: jsonRoot });
+          }),
+      async ({ dest, format: kind, separator, source }) => {
+        const pathSep = separator as typeof path.sep;
+        if (kind === JSON_KIND) {
+          console.error(
+            '[WARN] DirectoryJSON output is lossy and should be avoided',
+          );
+        }
+        const output =
+          kind === CBOR_KIND
+            ? await createCBORSnapshot({
+                separator: pathSep,
+                source,
+              })
+            : kind === JSON_KIND
+              ? await createJSONSnapshot({ separator: pathSep, source })
+              : await createCJSONSnapshot({ separator: pathSep, source });
 
         if (dest) {
           await mkdir(path.dirname(dest), { recursive: true });
 
-          await writeFile(
-            dest,
-            typeof output === 'string'
-              ? output
-              : new TextDecoder().decode(output),
-            'utf-8',
-          );
+          await writeFile(dest, output);
+
           console.error(
             '[INFO] Wrote %s snapshot of %s to %s',
-            binary ? 'Compact JSON' : 'DirectoryJSON',
-            dir,
+            kind.toUpperCase(),
+            source,
             dest,
           );
         } else {
@@ -100,18 +130,69 @@ async function main(): Promise<void> {
           .positional('snapshot', {
             coerce: path.resolve,
             demandOption: true,
-            describe: 'Path to snapshot file',
+            describe: 'Path to snapshot file (CBOR/CJSON/DirectoryJSON)',
           })
           .positional('dest', {
             coerce: path.resolve,
             default: process.cwd(),
             defaultDescription: 'Current working directory',
             describe: 'Destination directory',
+          })
+          .options({
+            'dry-run': {
+              alias: 'D',
+              description: 'Print what would be written to the filesystem',
+              type: 'boolean',
+            },
+            format: {
+              alias: 'f',
+              choices: [CBOR_KIND, CJSON_KIND, JSON_KIND],
+              default: CJSON_KIND,
+              describe: 'Snapshot format',
+              nargs: 1,
+              requiresArg: true,
+              type: 'string',
+            },
           }),
-      async ({ dest, snapshot }) => {
-        const value = await nodeFs.promises.readFile(snapshot);
-        await exportSnapshot(value, { dir: dest });
-        console.error('[INFO] Exported %s to %s', snapshot, dest);
+      async ({ dest, dryRun, format: kind, snapshot }) => {
+        const data = (await nodeFs.promises.readFile(snapshot)) as unknown;
+        switch (kind) {
+          case CBOR_KIND: {
+            await exportSnapshot(kind, data as CborUint8Array<SnapshotNode>, {
+              dest,
+              dryRun,
+            });
+            break;
+          }
+          case CJSON_KIND: {
+            await exportSnapshot(kind, data as JsonUint8Array<SnapshotNode>, {
+              dest,
+              dryRun,
+            });
+            break;
+          }
+          case JSON_KIND: {
+            await exportSnapshot(kind, data as Uint8Array, {
+              dest,
+              dryRun,
+            });
+            break;
+          }
+
+          /* c8 ignore next */
+          default: {
+            throw new TypeError('Invalid format');
+          }
+        }
+
+        if (!dryRun) {
+          console.error(
+            '[INFO] Exported %s snapshot of %s to %s',
+            kind.toUpperCase(),
+            snapshot,
+            dest,
+          );
+        }
       },
     )
     .options({})
