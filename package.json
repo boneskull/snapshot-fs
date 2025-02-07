@@ -62,7 +62,7 @@
     "lint:sources": "eslint .",
     "prepare": "husky; npm run build",
     "test": "node --import tsx --test \"./test/*.test.ts\"",
-    "test:ci": "c8 --all --include src -- node --import tsx --test --test-reporter=spec \"./test/*.test.ts\"",
+    "test:ci": "c8 --all --include src -- node --import tsx --test \"./test/*.test.ts\"",
     "test:update": "node --import tsx --test --test-update-snapshots \"./test/*.test.ts\""
   },
   "dependencies": {
