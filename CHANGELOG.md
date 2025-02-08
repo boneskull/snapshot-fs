@@ -1,5 +1,16 @@
 # Changelog
 
+## [5.0.0](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v4.0.0...snapshot-fs-v5.0.0) (2025-02-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* The CLI options have changed; `--binary` is now replaced by a `--format` option which can be one of `cbor`, `cjson`, or `json`.  The default format is now CJSON, which was what you'd get if you used `--binary` previously.  `json` is `DirectoryJSON` output, which will now print a warning about it being a lossy format.  `cbor` is a pure-binary format (look it up on Wikipedia) and results in smaller files and faster (de-)serialization than CJSON.  `--dir` is now `--source`.  `--json-root` has been removed (and may be restored later).  The `export` subcommand now supports a `--dry-run` flag, which will print what would be exported and how it affects existing files.  Added the `--separator` option, though this needs further testing on Windows.
+
+### Features
+
+* add CBOR support ([#289](https://github.com/boneskull/snapshot-fs/issues/289)) ([e34f86a](https://github.com/boneskull/snapshot-fs/commit/e34f86a65efb9e5330b6737d66cd3d1ffbf2d3a8))
+
 ## [4.0.0](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v3.1.2...snapshot-fs-v4.0.0) (2025-01-31)
 
 
