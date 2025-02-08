@@ -8,7 +8,14 @@
 
 I wanted something to help convert directories of test fixtures on-disk to a format usable by an in-memory filesystem ([memfs][]).
 
-To that end, the `snapshot-fs` package ships a CLI, `snapshot-fs`, which converts a directory tree to a `DirectoryJSON` object (or [_JSON snapshot_](https://github.com/streamich/memfs/blob/master/docs/snapshot/index.md)) for use with `memfs`.
+To that end, the `snapshot-fs` package ships a CLI, `snapshot-fs`, which converts a directory tree to a [Compact JSON][], [CBOR][] or [DirectoryJSON][] snapshot for use with `memfs`.
+
+## 🎁 _New in v5.0.0_
+
+- The command-line options have changed; see [Usage](#usage) below.
+- The default input/output format is now CJSON.
+- CBOR snapshots are now supported.
+- The `export` subcommand got a `--dry-run` flag.
 
 ## 🎁 _New in v2.0.0_
 
@@ -30,95 +37,154 @@ To that end, the `snapshot-fs` package ships a CLI, `snapshot-fs`, which convert
 ```text
 snapshot-fs [dest]
 
-Create JSON snapshot of directory
+Create memfs snapshot from filesystem
 
 Commands:
-  snapshot-fs create [dest]             Create JSON snapshot of directory
+  snapshot-fs create [dest]             Create memfs snapshot from filesystem
                                                                        [default]
-  snapshot-fs export <snapshot> [dest]  Export an existing snapshot to the files
-                                        ystem
+  snapshot-fs export <snapshot> [dest]  Export a JSON snapshot to the filesystem
+
+Output:
+      --separator, --sep  Path separator
+                                  [choices: "posix", "win32"] [default: "posix"]
+  -f, --format            Snapshot format
+                  [string] [choices: "cbor", "cjson", "json"] [default: "cjson"]
 
 Positionals:
-  dest  Output .json file; if omitted, written to stdout                [string]
+  dest  Path to output file
+
+Input:
+  -s, --source  File or directory to snapshot
+                                         [string] [default: (current directory)]
 
 Options:
-      --version    Show version number                                 [boolean]
-      --help       Show help                                           [boolean]
-  -b, --binary     Output a memfs JSON snapshot instead of DirectoryJSON
-                                                                       [boolean]
-  -d, --dir        Directory to read from
-                                   [string] [default: Current working directory]
-  -r, --json-root  DirectoryJSON root                    [string] [default: "/"]
+      --version  Show version number                                   [boolean]
+      --help     Show help                                             [boolean]
 
 For more information, visit https://github.com/boneskull/snapshot-fs
-
 ```
 
 When run without a subcommand, `create` will be invoked.
 
-### `create` w/ `DirectoryJSON`
+### `create` w/ [Compact JSON][] Snapshots
 
-If you aren't working with binary files and your directories are small, `DirectoryJSON` is good enough.
-
-```sh
-snapshot-fs --dir /some/dir /path/to/output.json
-```
-
-or:
+By default (as of v5.0.0), `snapshot-fs` will create a snapshot in [CJSON/Compact JSON][Compact JSON] format.
 
 ```sh
-snapshot-fs create --dir /some/dir /path/to/output.json
+snapshot-fs --source /some/dir /path/to/output.json
 ```
 
-In your code, you can use the resulting file:
+This is equivalent to:
 
-```js
+```sh
+snapshot-fs create --source /some/dir /path/to/output.json --format=cjson
+```
+
+In your code, you can use the resulting file using `memfs` directly:
+
+```ts
+import { type JsonUint8Array, type SnapshotNode, fromJsonSnapshot } from 'memfs/lib/snapshot/index.js';
 import { memfs } from 'memfs';
-import { readFile } from 'node:fs/promises';
 
-/** @type {import('memfs').DirectoryJSON} */
-const directoryJson = await readFile('/path/to/output.json', 'utf8').then(
-  JSON.parse,
-);
+const data = (await readFile(
+  '/path/to/output.json',
+)) as unknown as JsonUint8Array<SnapshotNode>;
 
-const { vol } = memfs(directoryJson);
+const {vol} = memfs()
+await fromJsonSnapshot(data, fs: vol.promises);
 
 console.log(vol.toTree());
 
 // ... do your thing
 ```
 
-### `create` w/ JSON Snapshots
+...or you can use the `readCJSONSnapshot()` helper from `snapshot-fs`:
 
-[memfs][]'s `DirectoryJSON` format doesn't support binary files. If you need to support binary files—or you're interested in re-exporting back to the filesystem later—use the `--binary` flag. This creates a JSON _snapshot_ (for the curious, it's encoded as ["Compact JSON"](https://jsonjoy.com/specs/compact-json)) and must be consumed differently.
+```ts
+import type { JsonUint8Array, SnapshotNode } from 'memfs/lib/snapshot/index.js';
+import { readCJSONSnapshot } from 'snapshot-fs';
 
-> [!NOTE]
-> The resulting JSON is for machines.
+const data = (await readFile(
+  '/path/to/output.json',
+)) as unknown as JsonUint8Array<SnapshotNode>;
 
-```sh
-snapshot-fs create --binary --dir /some/dir /path/to/output.json
+const vol = await readCJSONSnapshot(data);
+
+console.log(vol.toTree());
 ```
 
-Here's an example of using the result:
+This is fast; `JSON.parse()` is never called!
+
+(but we can get faster...)
+
+### `create` w/ [CBOR][] Snapshots
+
+Similar to the above, you can create a CBOR-formatted snapshot this way:
+
+```sh
+snapshot-fs --source /some/dir /path/to/output.json --format=cbor
+```
+
+In your code, you can use the resulting file using `memfs` directly:
+
+```ts
+import { type SnapshotNode, fromBinarySnapshot } from 'memfs/lib/snapshot/index.js';
+import type { CborUint8Array } from '@jsonjoy.com/json-pack/lib/cbor/types.js';
+import { memfs } from 'memfs';
+
+const data = (await readFile(
+  '/path/to/output.json',
+)) as unknown as CborUint8Array<SnapshotNode>;
+
+const {vol} = memfs()
+await fromBinarySnapshot(data, fs: vol.promises);
+
+console.log(vol.toTree());
+
+// ... do your thing
+```
+
+...or you can use the `readCBORSnapshot()` helper from `snapshot-fs`:
+
+```ts
+import {
+  type SnapshotNode,
+  fromBinarySnapshot,
+} from 'memfs/lib/snapshot/index.js';
+import type { CborUint8Array } from '@jsonjoy.com/json-pack/lib/cbor/types.js';
+import { readCBORSnapshot } from 'snapshot-fs';
+
+const data = (await readFile(
+  '/path/to/output.json',
+)) as unknown as CborUint8Array<SnapshotNode>;
+
+const vol = await readCBORSnapshot(data);
+
+console.log(vol.toTree());
+```
+
+### `create` w/ `DirectoryJSON` Snapshots
+
+> [!CAUTION]
+>
+> `DirectoryJSON` is somewhat lossy and should be avoided if you ever want to re-create snapshots on your _real_ filesystem (e.g., using [export](#export)). For a directory full of text files, this is fine; for anything else, use CJSON or CBOR.
+
+```sh
+snapshot-fs --source /some/dir /path/to/output.json --format=json
+```
+
+This can be read into a `memfs` `Volume` like so:
 
 ```js
 import { readFile } from 'node:fs/promises';
-import { fromJsonSnapshot } from 'memfs/lib/snapshot/index.js';
+import { memfs } from 'memfs';
 
-/**
- * @import {SnapshotNode} from 'memfs/lib/snapshot/types.js';
- * @import {JsonUint8Array} from 'memfs/lib/snapshot/index.js';
- */
-
-const snapshotJson = /** @type {JsonUint8Array<SnapshotNode>} */ (
-  await readFile('/path/to/output.json') // read as a Buffer!
+const directoryJson = JSON.parse(
+  await readFile('/path/to/output.json', 'utf8'),
 );
 
 const { vol } = memfs();
-
-// `fromJsonSnapshot` will populate the Volume at the root path /
-// with the snapshot data
-await fromJsonSnapshot(snapshot, { fs: vol.promises, path: '/' });
+vol.fromJSON(directoryJson);
 ```
 
 ### `export`
@@ -128,15 +194,22 @@ This allows you to re-create a directory on the filesystem from a snapshot. Hand
 ```text
 snapshot-fs export <snapshot> [dest]
 
-Export an existing snapshot to the filesystem
+Export a JSON snapshot to the filesystem
 
 Positionals:
-  snapshot  Path to snapshot .json file                      [string] [required]
-  dest      Destination directory  [string] [default: Current working directory]
+  snapshot  Path to snapshot file (CBOR/CJSON/DirectoryJSON)          [required]
+  dest      Destination directory           [default: Current working directory]
+
+Output:
+      --separator, --sep  Path separator
+                                  [choices: "posix", "win32"] [default: "posix"]
 
 Options:
-  --version  Show version number                                       [boolean]
-  --help     Show help                                                 [boolean]
+      --version  Show version number                                   [boolean]
+      --help     Show help                                             [boolean]
+  -D, --dry-run  Print what would be written to the filesystem         [boolean]
+  -f, --format   Snapshot format
+                  [string] [choices: "cbor", "cjson", "json"] [default: "cjson"]
 ```
 
 If you have a snapshot (either format) and you want to re-create snapshot on the filesystem, use the `export` subcommand:
@@ -147,19 +220,17 @@ snapshot-fs export /path/to/snapshot.json /path/to/output
 
 The destination directory will be created if it doesn't exist.
 
-Careful with this one!
+> [!TIP]
+>
+> Use the `--dry-run` flag with `export` to see what would be written to the filesystem.
 
 ## API
 
-`snapshot-fs` exports both ESM and CJS modules.
-
 Some potentially-useful stuff exported from `snapshot-fs`:
 
-- `createSnapshot()` - Create a JSON snapshot from a real or virtual FS
-- `createDirectoryJson()` - Create a `DirectoryJSON` object from a real or virtual FS; warns if a binary file is detected
-- `readSnapshot()` - Read a snapshot from a file and load it into a real or virtual FS
+- `createSnapshot()`/`createDirectoryJSONSnapshot()`/`createCJSONSnapshot()`/`createCBORSNapshot()` - Create a JSON snapshot from a real or virtual FS
+- `readSnapshot()`/`readDirectoryJSONSnapshot()`/`readCBORSnapshot()`/`readCJSONSnapshot()` - Read a snapshot from a file and load it into a real or virtual FS
 - `exportSnapshot()` - Alias for `readSnapshot()` defaulting to the real FS
-- `isCompactJson()` - Type guard to check if a `Uint8Array` is a Compact JSON snapshot
 
 See the typings for more information.
 
@@ -168,3 +239,6 @@ See the typings for more information.
 Copyright 2024 [Christopher Hiller](https://github.com/boneskull). Licensed Apache-2.0
 
 [memfs]: https://npm.im/memfs
+[Compact JSON]: https://jsonjoy.com/specs/compact-json
+[CBOR]: https://en.wikipedia.org/wiki/CBOR
+[DirectoryJSON]: https://github.com/streamich/memfs/blob/2c6a6ca55ad2e661f40e488fe5ea4087438bae0e/src/volume.ts#L196-L198
