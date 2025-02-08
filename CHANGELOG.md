@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.0.1](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v5.0.0...snapshot-fs-v5.0.1) (2025-02-08)
+
+
+### Bug Fixes
+
+* **docs:** update README with info for v5 ([49e4181](https://github.com/boneskull/snapshot-fs/commit/49e41817327e954bc85eaa20d6c057fa94f72d57))
+
 ## [5.0.0](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v4.0.0...snapshot-fs-v5.0.0) (2025-02-08)
 
 
