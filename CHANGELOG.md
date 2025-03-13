@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.0.2](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v5.0.1...snapshot-fs-v5.0.2) (2025-03-13)
+
+
+### Bug Fixes
+
+* **deps:** update dependency [@jsonjoy](https://github.com/jsonjoy).com/json-pack to v1.2.0 ([#334](https://github.com/boneskull/snapshot-fs/issues/334)) ([c05849f](https://github.com/boneskull/snapshot-fs/commit/c05849f9e1a57a652328857ed8e2705d6bf8c6e8))
+
 ## [5.0.1](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v5.0.0...snapshot-fs-v5.0.1) (2025-02-08)
 
 
