@@ -6,6 +6,11 @@ jobs:
   test:
     name: Build & Test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - node-version: 22.15.0
+          - node-version: 24.0.1
     steps:
       - name: Checkout Repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
