@@ -110,7 +110,7 @@
       "**/*.cts",
       "**/*.d.ts"
     ],
-    "node-test-runner": {
+    "node": {
       "entry": [
         "test/*.test.ts"
       ]
