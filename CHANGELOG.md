@@ -1,5 +1,15 @@
 # Changelog
 
+## [5.0.2](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v5.0.1...snapshot-fs-v5.0.2) (2025-05-13)
+
+
+### Bug Fixes
+
+* add support for Node.js v24.x ([48ab62a](https://github.com/boneskull/snapshot-fs/commit/48ab62aec5edea4bcbb5a055df55575417e0e1a4))
+* **deps:** update dependency [@jsonjoy](https://github.com/jsonjoy).com/json-pack to v1.2.0 ([#334](https://github.com/boneskull/snapshot-fs/issues/334)) ([c05849f](https://github.com/boneskull/snapshot-fs/commit/c05849f9e1a57a652328857ed8e2705d6bf8c6e8))
+* **deps:** update dependency json-stable-stringify to v1.3.0 ([#367](https://github.com/boneskull/snapshot-fs/issues/367)) ([2b1fcad](https://github.com/boneskull/snapshot-fs/commit/2b1fcad4800d34e88b51bc1a07acab1edb621d4d))
+* **deps:** update dependency memfs to v4.17.1 ([#379](https://github.com/boneskull/snapshot-fs/issues/379)) ([95f018a](https://github.com/boneskull/snapshot-fs/commit/95f018ad7edf8d037115fa564f6bfcbe0c100e62))
+
 ## [5.0.1](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v5.0.0...snapshot-fs-v5.0.1) (2025-02-08)
 
 
