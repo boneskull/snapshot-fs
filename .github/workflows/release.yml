@@ -15,4 +15,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Create Release
-        uses: googleapis/release-please-action@fb7f385da2046f35c544011bc27c9f809122ad2c # v4.2.0
+        uses: googleapis/release-please-action@a02a34c4d625f9be7cb89156071d8567266a2445 # v4.2.0
