@@ -1,15 +1,16 @@
-name: Manual publish
+name: Publish to npm
 
-on: workflow_dispatch
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
   id-token: write
 
 jobs:
   publish:
-    name: Manual publish
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
