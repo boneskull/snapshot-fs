@@ -24,5 +24,5 @@ runs:
       env:
         NODE_AUTH_TOKEN: ${{ inputs.token }}
       run: npm publish --provenance --access public --registry https://registry.npmjs.org
-      # shell: bash
+      shell: bash
   using: composite
