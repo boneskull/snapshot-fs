@@ -1,5 +1,8 @@
 name: release-please
 
+concurrency:
+  group: ${{ github.workflow }}
+
 on:
   push:
     branches:
