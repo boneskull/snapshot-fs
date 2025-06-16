@@ -1,8 +1,7 @@
 // @ts-check
 
 import jsPlugin from '@eslint/js';
-import stylisticJs from '@stylistic/eslint-plugin-js';
-import stylisticTs from '@stylistic/eslint-plugin-ts';
+import stylistic from '@stylistic/eslint-plugin';
 import eslintPluginJsonc from 'eslint-plugin-jsonc';
 import nodePlugin from 'eslint-plugin-n';
 import perfectionist from 'eslint-plugin-perfectionist';
@@ -24,12 +23,12 @@ export default tseslint.config(
     },
   },
   {
-    files: ['**/*.ts'],
+    files: ['**/*.ts', '**/*.js'],
     plugins: {
-      '@stylistic/ts': stylisticTs,
+      '@stylistic': stylistic,
     },
     rules: {
-      '@stylistic/ts/lines-around-comment': [
+      '@stylistic/lines-around-comment': [
         'warn',
         {
           allowArrayStart: true,
@@ -42,7 +41,7 @@ export default tseslint.config(
         },
       ],
 
-      '@stylistic/ts/semi': 'error',
+      '@stylistic/semi': 'error',
 
       '@typescript-eslint/consistent-type-exports': [
         'error',
@@ -99,25 +98,6 @@ export default tseslint.config(
     },
   },
   {
-    extends: [tseslint.configs.disableTypeChecked],
-    files: ['**/*.js', '**/*.cjs', '*.cjs', '*.js'],
-    plugins: {
-      '@stylistic/js': stylisticJs,
-    },
-    rules: {
-      '@stylistic/js/lines-around-comment': [
-        'warn',
-        {
-          allowClassStart: true,
-          // these conflict with prettier, so we must allow them
-          allowObjectStart: true,
-          beforeBlockComment: true,
-        },
-      ],
-      '@stylistic/js/semi': 'error',
-    },
-  },
-  {
     files: ['src/cli.ts'],
     rules: {
       'n/hashbang': 'off',
@@ -136,6 +116,6 @@ export default tseslint.config(
   },
   eslintPluginJsonc.configs['flat/prettier'][2],
   {
-    ignores: ['dist', 'coverage', '*.snapshot', '.tshy*'],
+    ignores: ['dist', 'coverage', '*.snapshot', '.tsup'],
   },
 );
