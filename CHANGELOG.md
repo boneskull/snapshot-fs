@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.0.4](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v5.0.3...snapshot-fs-v5.0.4) (2025-08-09)
+
+
+### Bug Fixes
+
+* **deps:** update dependency [@jsonjoy](https://github.com/jsonjoy).com/json-pack to v1.8.0 ([#489](https://github.com/boneskull/snapshot-fs/issues/489)) ([2914e68](https://github.com/boneskull/snapshot-fs/commit/2914e6843f7a4f7b921d18d7320b43ff013d5fc6))
+* **deps:** update dependency supports-color to v10.1.0 ([#490](https://github.com/boneskull/snapshot-fs/issues/490)) ([bb0b550](https://github.com/boneskull/snapshot-fs/commit/bb0b550c3755a8e7b43a49a675e6c1759da9248a))
+
 ## [5.0.3](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v5.0.2...snapshot-fs-v5.0.3) (2025-05-27)
 
 
