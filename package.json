@@ -71,7 +71,7 @@
     "memfs": "4.17.2",
     "supports-color": "10.2.0",
     "tree-dump": "1.0.3",
-    "yargs": "17.7.2"
+    "yargs": "18.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "19.8.1",
