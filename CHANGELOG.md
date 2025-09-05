@@ -1,5 +1,19 @@
 # Changelog
 
+## [5.0.4](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v5.0.3...snapshot-fs-v5.0.4) (2025-09-05)
+
+
+### Bug Fixes
+
+* **deps:** update dependency [@jsonjoy](https://github.com/jsonjoy).com/json-pack to v1.10.0 ([#499](https://github.com/boneskull/snapshot-fs/issues/499)) ([6380f88](https://github.com/boneskull/snapshot-fs/commit/6380f88ab06be9c8c43239556bf9ad9802544534))
+* **deps:** update dependency [@jsonjoy](https://github.com/jsonjoy).com/json-pack to v1.10.1 ([#504](https://github.com/boneskull/snapshot-fs/issues/504)) ([1b962a7](https://github.com/boneskull/snapshot-fs/commit/1b962a78f697750087e353c6c7b75f1e62fec827))
+* **deps:** update dependency [@jsonjoy](https://github.com/jsonjoy).com/json-pack to v1.11.0 ([#507](https://github.com/boneskull/snapshot-fs/issues/507)) ([0549844](https://github.com/boneskull/snapshot-fs/commit/0549844c627aee0ca762f3d0e5506e240751c0e8))
+* **deps:** update dependency [@jsonjoy](https://github.com/jsonjoy).com/json-pack to v1.8.0 ([#489](https://github.com/boneskull/snapshot-fs/issues/489)) ([2914e68](https://github.com/boneskull/snapshot-fs/commit/2914e6843f7a4f7b921d18d7320b43ff013d5fc6))
+* **deps:** update dependency [@jsonjoy](https://github.com/jsonjoy).com/json-pack to v1.9.0 ([#493](https://github.com/boneskull/snapshot-fs/issues/493)) ([3e60dbb](https://github.com/boneskull/snapshot-fs/commit/3e60dbbfef51d763469e50fd0c4ba5e7779955d0))
+* **deps:** update dependency supports-color to v10.1.0 ([#490](https://github.com/boneskull/snapshot-fs/issues/490)) ([bb0b550](https://github.com/boneskull/snapshot-fs/commit/bb0b550c3755a8e7b43a49a675e6c1759da9248a))
+* **deps:** update dependency supports-color to v10.2.0 ([#508](https://github.com/boneskull/snapshot-fs/issues/508)) ([41cda9b](https://github.com/boneskull/snapshot-fs/commit/41cda9bc896550a42a63cd37e508300264f4da1b))
+* **deps:** update dependency yargs to v18 ([#421](https://github.com/boneskull/snapshot-fs/issues/421)) ([72e534e](https://github.com/boneskull/snapshot-fs/commit/72e534e12e42445557002d1197eb3239f662401d))
+
 ## [5.0.3](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v5.0.2...snapshot-fs-v5.0.3) (2025-05-27)
 
 
