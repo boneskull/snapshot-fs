@@ -1,5 +1,4 @@
-import { memfs } from 'memfs';
-import { type Volume } from 'memfs/lib/volume.js';
+import { memfs, type Volume } from 'memfs';
 import nodeFs from 'node:fs';
 import { type sep } from 'node:path';
 
