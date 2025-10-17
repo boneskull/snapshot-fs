@@ -1,5 +1,29 @@
 # Changelog
 
+## [5.0.4](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v5.0.3...snapshot-fs-v5.0.4) (2025-10-17)
+
+
+### Bug Fixes
+
+* **deps:** fixes for memfs update ([3c22601](https://github.com/boneskull/snapshot-fs/commit/3c22601e96c8c394d5d6db38b82dfe5d033cfed6))
+* **deps:** update dependency [@jsonjoy](https://github.com/jsonjoy).com/json-pack to v1.10.0 ([#499](https://github.com/boneskull/snapshot-fs/issues/499)) ([6380f88](https://github.com/boneskull/snapshot-fs/commit/6380f88ab06be9c8c43239556bf9ad9802544534))
+* **deps:** update dependency [@jsonjoy](https://github.com/jsonjoy).com/json-pack to v1.10.1 ([#504](https://github.com/boneskull/snapshot-fs/issues/504)) ([1b962a7](https://github.com/boneskull/snapshot-fs/commit/1b962a78f697750087e353c6c7b75f1e62fec827))
+* **deps:** update dependency [@jsonjoy](https://github.com/jsonjoy).com/json-pack to v1.11.0 ([#507](https://github.com/boneskull/snapshot-fs/issues/507)) ([0549844](https://github.com/boneskull/snapshot-fs/commit/0549844c627aee0ca762f3d0e5506e240751c0e8))
+* **deps:** update dependency [@jsonjoy](https://github.com/jsonjoy).com/json-pack to v1.14.0 ([#535](https://github.com/boneskull/snapshot-fs/issues/535)) ([0ec967a](https://github.com/boneskull/snapshot-fs/commit/0ec967a47a5e090e54d4824f6276ba1509b6d23a))
+* **deps:** update dependency [@jsonjoy](https://github.com/jsonjoy).com/json-pack to v1.15.0 ([#557](https://github.com/boneskull/snapshot-fs/issues/557)) ([865ac3c](https://github.com/boneskull/snapshot-fs/commit/865ac3cb3190dca6d2036a3bde2240b250395934))
+* **deps:** update dependency [@jsonjoy](https://github.com/jsonjoy).com/json-pack to v1.16.0 ([#558](https://github.com/boneskull/snapshot-fs/issues/558)) ([193df1b](https://github.com/boneskull/snapshot-fs/commit/193df1bcc8dd8a2ba3f696bd3faa94a5b4a3b568))
+* **deps:** update dependency [@jsonjoy](https://github.com/jsonjoy).com/json-pack to v1.17.0 ([#559](https://github.com/boneskull/snapshot-fs/issues/559)) ([2ed38a8](https://github.com/boneskull/snapshot-fs/commit/2ed38a8091840d5470446bc529b2a3b5740e2620))
+* **deps:** update dependency [@jsonjoy](https://github.com/jsonjoy).com/json-pack to v1.19.0 ([#560](https://github.com/boneskull/snapshot-fs/issues/560)) ([9308a6c](https://github.com/boneskull/snapshot-fs/commit/9308a6c7c61d5ea1cbdf82ae944c65bb771492c2))
+* **deps:** update dependency [@jsonjoy](https://github.com/jsonjoy).com/json-pack to v1.20.0 ([#561](https://github.com/boneskull/snapshot-fs/issues/561)) ([246376b](https://github.com/boneskull/snapshot-fs/commit/246376b9d628b5961bca17fa3e58bb675e3f57b2))
+* **deps:** update dependency [@jsonjoy](https://github.com/jsonjoy).com/json-pack to v1.8.0 ([#489](https://github.com/boneskull/snapshot-fs/issues/489)) ([2914e68](https://github.com/boneskull/snapshot-fs/commit/2914e6843f7a4f7b921d18d7320b43ff013d5fc6))
+* **deps:** update dependency [@jsonjoy](https://github.com/jsonjoy).com/json-pack to v1.9.0 ([#493](https://github.com/boneskull/snapshot-fs/issues/493)) ([3e60dbb](https://github.com/boneskull/snapshot-fs/commit/3e60dbbfef51d763469e50fd0c4ba5e7779955d0))
+* **deps:** update dependency memfs to v4.49.0 ([5509256](https://github.com/boneskull/snapshot-fs/commit/55092569f0ca8293df96a94f7165ba9b39b9b163))
+* **deps:** update dependency supports-color to v10.1.0 ([#490](https://github.com/boneskull/snapshot-fs/issues/490)) ([bb0b550](https://github.com/boneskull/snapshot-fs/commit/bb0b550c3755a8e7b43a49a675e6c1759da9248a))
+* **deps:** update dependency supports-color to v10.2.0 ([#508](https://github.com/boneskull/snapshot-fs/issues/508)) ([41cda9b](https://github.com/boneskull/snapshot-fs/commit/41cda9bc896550a42a63cd37e508300264f4da1b))
+* **deps:** update dependency supports-color to v10.2.2 ([#528](https://github.com/boneskull/snapshot-fs/issues/528)) ([896732a](https://github.com/boneskull/snapshot-fs/commit/896732ad8743f65d7c9de83b3aa939dfba0af0d2))
+* **deps:** update dependency tree-dump to v1.1.0 ([#524](https://github.com/boneskull/snapshot-fs/issues/524)) ([15da472](https://github.com/boneskull/snapshot-fs/commit/15da47231745ec9e1e28bf2c6e537f0eae5d1e9f))
+* **deps:** update dependency yargs to v18 ([#421](https://github.com/boneskull/snapshot-fs/issues/421)) ([72e534e](https://github.com/boneskull/snapshot-fs/commit/72e534e12e42445557002d1197eb3239f662401d))
+
 ## [5.0.3](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v5.0.2...snapshot-fs-v5.0.3) (2025-05-27)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "snapshot-fs",
-  "version": "5.0.3",
+  "version": "5.0.4",
   "type": "module",
   "description": "Create a filesystem snapshot for use with memfs",
   "repository": {
