@@ -1,0 +1,62 @@
+# Cursor Rules for snapshot-fs
+
+## Critical Commands
+
+- ALWAYS use `npm ci --foreground-scripts` instead of `npm install`
+- Run commands in this order: install → build → test/lint
+- Build automatically runs via postinstall hook during `npm ci`
+
+## Testing
+
+- DO NOT run `npm test` or `npm run test:ci` - they fail due to glob pattern bug
+- ALWAYS use: `node --import tsx --test test/cli.test.ts test/snapshot.test.ts test/read.test.ts`
+- Test the CLI manually after building: `./dist/esm/cli.js`
+
+## Build Requirements
+
+- Always run `npm run build` after source changes
+- Build creates dual output in `dist/commonjs/` and `dist/esm/`
+- CLI binary is at `dist/esm/cli.js`
+
+## TypeScript Conventions
+
+- Use `.js` extensions in imports even though files are `.ts` (Node.js ES module requirement)
+- Project uses ES modules, not CommonJS
+- tshy creates dual builds automatically
+
+## File Structure
+
+- Source files in `src/`
+- Test files in `test/`
+- Build output in `dist/` (ignored by git)
+- Configuration in root and `.tshy/`
+
+## Development Workflow
+
+1. `npm ci --foreground-scripts` (installs + builds)
+2. Edit files in `src/`
+3. `npm run build`
+4. `node --import tsx --test test/*.test.ts`
+5. `npm run lint`
+6. Test CLI: `./dist/esm/cli.js --source ./test/fixture/text /tmp/test.cjson`
+
+## Common Pitfalls
+
+- Node.js version must be v22.13.0+ or v24.0.0+
+- Never use `npm install` - use `npm ci --foreground-scripts`
+- Never use `npm test` scripts - use direct node command
+- Always build before testing CLI functionality
+- Import paths must use `.js` even in `.ts` files
+
+## Linting and Formatting
+
+- `npm run lint` runs eslint + knip
+- Pre-commit hooks run eslint + prettier on staged files
+- Commit messages must follow conventional commit format
+
+## CI Replication
+
+- `npm ci --foreground-scripts`
+- `npm run lint`
+- Skip test:ci due to known glob issue
+
