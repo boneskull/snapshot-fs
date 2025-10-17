@@ -132,3 +132,7 @@ dist
 dist
 .tshy-build*
 src/package.json
+
+# Cursor IDE
+.cursor/
+*.cursor-*
