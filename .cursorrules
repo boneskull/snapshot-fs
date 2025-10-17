@@ -59,4 +59,3 @@
 - `npm ci --foreground-scripts`
 - `npm run lint`
 - Skip test:ci due to known glob issue
-
