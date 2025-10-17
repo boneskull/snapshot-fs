@@ -1,5 +1,16 @@
 # Changelog
 
+## [6.0.0](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v5.0.4...snapshot-fs-v6.0.0) (2025-10-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* minimum Node.js version now v22.16.0
+
+### Bug Fixes
+
+* minimum Node.js version now v22.16.0 ([d464481](https://github.com/boneskull/snapshot-fs/commit/d464481657e2391ee0e0a5a78a0d9669485935aa))
+
 ## [5.0.4](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v5.0.3...snapshot-fs-v5.0.4) (2025-10-17)
 
 
