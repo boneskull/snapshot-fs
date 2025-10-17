@@ -7,8 +7,8 @@
  * and are copyrighted by the original author and licesned under Apache-2.0.
  */
 
+import type { Volume } from 'memfs';
 import type { IDirent } from 'memfs/lib/node/types/misc.js';
-import type { Volume } from 'memfs/lib/volume.js';
 
 import nodeFs, { type Dirent } from 'node:fs';
 import path from 'node:path';

@@ -8,14 +8,13 @@
 // eslint-disable-next-line n/no-missing-import
 import { type CborUint8Array } from '@jsonjoy.com/json-pack/lib/cbor/index.js';
 import stableStringify from 'json-stable-stringify';
-import { memfs } from 'memfs';
+import { memfs, type Volume } from 'memfs';
 import {
   type JsonUint8Array,
   type SnapshotNode,
   toBinarySnapshot,
   toJsonSnapshot,
 } from 'memfs/lib/snapshot/index.js';
-import { type Volume } from 'memfs/lib/volume.js';
 import nodeFs from 'node:fs';
 import { type sep } from 'node:path';
 
