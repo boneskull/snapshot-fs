@@ -1,8 +1,7 @@
 // @ts-check
 
 import jsPlugin from '@eslint/js';
-import stylisticJs from '@stylistic/eslint-plugin-js';
-import stylisticTs from '@stylistic/eslint-plugin-ts';
+import stylistic from '@stylistic/eslint-plugin';
 import eslintPluginJsonc from 'eslint-plugin-jsonc';
 import nodePlugin from 'eslint-plugin-n';
 import perfectionist from 'eslint-plugin-perfectionist';
@@ -26,10 +25,10 @@ export default tseslint.config(
   {
     files: ['**/*.ts'],
     plugins: {
-      '@stylistic/ts': stylisticTs,
+      '@stylistic': stylistic,
     },
     rules: {
-      '@stylistic/ts/lines-around-comment': [
+      '@stylistic/lines-around-comment': [
         'warn',
         {
           allowArrayStart: true,
@@ -42,7 +41,7 @@ export default tseslint.config(
         },
       ],
 
-      '@stylistic/ts/semi': 'error',
+      '@stylistic/semi': 'error',
 
       '@typescript-eslint/consistent-type-exports': [
         'error',
@@ -102,10 +101,10 @@ export default tseslint.config(
     extends: [tseslint.configs.disableTypeChecked],
     files: ['**/*.js', '**/*.cjs', '*.cjs', '*.js'],
     plugins: {
-      '@stylistic/js': stylisticJs,
+      '@stylistic': stylistic,
     },
     rules: {
-      '@stylistic/js/lines-around-comment': [
+      '@stylistic/lines-around-comment': [
         'warn',
         {
           allowClassStart: true,
@@ -114,7 +113,7 @@ export default tseslint.config(
           beforeBlockComment: true,
         },
       ],
-      '@stylistic/js/semi': 'error',
+      '@stylistic/semi': 'error',
     },
   },
   {
