@@ -1,3 +1,4 @@
+import { expect, expectAsync } from 'bupkis';
 import { memfs } from 'memfs';
 import { exec } from 'node:child_process';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
@@ -42,12 +43,12 @@ describe('snapshot-fs cli', () => {
   describe('subcommand', () => {
     describe('create', () => {
       describe('when no snapshot path provided', () => {
-        it('should print to stdout', async (t) => {
+        it('should print to stdout', async () => {
           const { stdout: actual } = await execCli(
             '--source',
             TEXT_FIXTURE_DIR,
           );
-          t.assert.notEqual(actual, '');
+          expect(actual, 'not to be', '');
         });
       });
 
@@ -70,13 +71,14 @@ describe('snapshot-fs cli', () => {
             result = await execCli('--source', TEXT_FIXTURE_DIR, dest);
           });
 
-          it('should not print to stdout', (t) => {
-            t.assert.equal(result.stdout, '');
+          it('should not print to stdout', () => {
+            expect(result.stdout, 'to equal', '');
           });
 
-          it('should print summary to stderr', (t) => {
-            t.assert.match(
+          it('should print summary to stderr', () => {
+            expect(
               result.stderr,
+              'to match',
               new RegExp(
                 `\\[INFO\\] Wrote ${CJSON_KIND.toUpperCase()} snapshot of .+?\\sto\\s.+`,
               ),
@@ -85,7 +87,7 @@ describe('snapshot-fs cli', () => {
 
           it(`should write a ${CJSON_KIND.toUpperCase()} snapshot`, async (t) => {
             const actual = await readFile(dest, 'utf-8');
-            t.assert.doesNotThrow(() => JSON.parse(actual));
+            expect(() => JSON.parse(actual) as unknown, 'not to throw');
             t.assert.snapshot(actual);
           });
         });
@@ -128,13 +130,14 @@ describe('snapshot-fs cli', () => {
                 );
               });
 
-              it('should not print to stdout', (t) => {
-                t.assert.equal(result.stdout, '');
+              it('should not print to stdout', () => {
+                expect(result.stdout, 'to equal', '');
               });
 
-              it('should print summary to stderr', (t) => {
-                t.assert.match(
+              it('should print summary to stderr', () => {
+                expect(
                   result.stderr,
+                  'to match',
                   new RegExp(
                     `\\[INFO\\] Wrote ${kind.toUpperCase()} snapshot of .+?\\sto\\s.+`,
                   ),
@@ -150,11 +153,11 @@ describe('snapshot-fs cli', () => {
                 });
               });
 
-              it(`should be a ${kind.toUpperCase()} snapshot`, async (t) => {
+              it(`should be a ${kind.toUpperCase()} snapshot`, async () => {
                 const actual = await readFile(dest);
-                await t.assert.doesNotReject(
-                  readSnapshot(kind, actual as any, { fs: memfs().fs }),
-                  `Expected ${kind} snapshot`,
+                await expectAsync(
+                  () => readSnapshot(kind, actual as any, { fs: memfs().fs }),
+                  'not to reject',
                 );
               });
             });
@@ -176,7 +179,7 @@ describe('snapshot-fs cli', () => {
 
       for (const kind of [CBOR_KIND, CJSON_KIND, JSON_KIND] as const) {
         describe(`--format=${kind}`, () => {
-          it('should export accurate snapshot contents to the filesystem', async (t) => {
+          it('should export accurate snapshot contents to the filesystem', async () => {
             // this roundtrips a snapshot to a temp dir and back into a snapshot,
             // then does a deep comparison of the two results.
             // I am unsure how stable `Volume.toJSON()` is.
@@ -212,7 +215,7 @@ describe('snapshot-fs cli', () => {
               }),
             ]);
 
-            t.assert.deepEqual(actualVol.toJSON(), expectedVol.toJSON());
+            expect(actualVol.toJSON(), 'to deeply equal', expectedVol.toJSON());
           });
         });
       }

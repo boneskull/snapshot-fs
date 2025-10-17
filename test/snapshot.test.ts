@@ -1,3 +1,4 @@
+import { expect } from 'bupkis';
 import { type DirectoryJSON, memfs } from 'memfs';
 import {
   fromBinarySnapshot,
@@ -29,7 +30,7 @@ describe('createCJSONSnapshot()', () => {
     await fromJsonSnapshot(snapshot, { fs: vol.promises, path: '/' });
   });
 
-  it('should clone binary files', async (t) => {
+  it('should clone binary files', async () => {
     const [actualFile, expectedFile] = await Promise.all([
       nodeFs.promises.readFile(path.join(FIXTURE_DIR, 'HappyFish.jpg')),
       vol.promises.readFile(path.join('/', 'HappyFish.jpg')),
@@ -39,7 +40,7 @@ describe('createCJSONSnapshot()', () => {
       .update(expectedFile)
       .digest('hex');
 
-    t.assert.equal(actualHash, expectedHash);
+    expect(actualHash, 'to equal', expectedHash);
   });
 });
 
@@ -55,7 +56,7 @@ describe('createCBORSnapshot()', () => {
     await fromBinarySnapshot(snapshot, { fs: vol.promises, path: '/' });
   });
 
-  it('should clone binary files', async (t) => {
+  it('should clone binary files', async () => {
     const [actualFile, expectedFile] = await Promise.all([
       nodeFs.promises.readFile(path.join(FIXTURE_DIR, 'HappyFish.jpg')),
       vol.promises.readFile(path.join('/', 'HappyFish.jpg')),
@@ -65,7 +66,7 @@ describe('createCBORSnapshot()', () => {
       .update(expectedFile)
       .digest('hex');
 
-    t.assert.equal(actualHash, expectedHash);
+    expect(actualHash, 'to equal', expectedHash);
   });
 });
 
@@ -80,7 +81,7 @@ describe('createJSONSnapshot()', () => {
     vol.fromJSON(JSON.parse(result) as DirectoryJSON, '/');
   });
 
-  it('should clone text files', async (t) => {
+  it('should clone text files', async () => {
     const [actualFile, expectedFile] = await Promise.all([
       nodeFs.promises.readFile(path.join(FIXTURE_DIR, 'README.md')),
       vol.promises.readFile(path.join('/', 'README.md')),
@@ -90,6 +91,6 @@ describe('createJSONSnapshot()', () => {
       .update(expectedFile)
       .digest('hex');
 
-    t.assert.equal(actualHash, expectedHash);
+    expect(actualHash, 'to equal', expectedHash);
   });
 });
