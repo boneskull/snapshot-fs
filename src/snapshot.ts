@@ -5,8 +5,7 @@
  * @module snapshot-fs/snapshot
  * @see {@link https://github.com/streamich/memfs/blob/master/docs/snapshot/index.md}
  */
-// eslint-disable-next-line n/no-missing-import
-import { type CborUint8Array } from '@jsonjoy.com/json-pack/lib/cbor/index.js';
+
 import stableStringify from 'json-stable-stringify';
 import { memfs, type Volume } from 'memfs';
 import {
@@ -19,6 +18,7 @@ import nodeFs from 'node:fs';
 import { type sep } from 'node:path';
 
 import { CBOR_KIND, readSnapshot } from './read.js';
+import { type CborUint8Array } from './types.js';
 
 /**
  * All files will be relative to this path in the output

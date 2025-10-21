@@ -1,5 +1,3 @@
-// eslint-disable-next-line n/no-missing-import
-import { type CborUint8Array } from '@jsonjoy.com/json-pack/lib/cbor/index.js';
 import { type DirectoryJSON, memfs } from 'memfs';
 import {
   fromBinarySnapshot,
@@ -10,6 +8,7 @@ import {
 } from 'memfs/lib/snapshot/index.js';
 
 import { type CreateSnapshotOptions, type FsApi } from './snapshot.js';
+import { type CborUint8Array } from './types.js';
 
 /**
  * Options for {@link readSnapshot}

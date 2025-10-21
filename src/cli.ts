@@ -10,8 +10,6 @@
  * @see {@link https://npm.im/memfs}
  */
 
-// eslint-disable-next-line n/no-missing-import
-import { type CborUint8Array } from '@jsonjoy.com/json-pack/lib/cbor/index.js';
 import { type JsonUint8Array } from 'memfs/lib/snapshot/json.js';
 import { type SnapshotNode } from 'memfs/lib/snapshot/types.js';
 import nodeFs from 'node:fs';
@@ -29,6 +27,7 @@ import {
   exportSnapshot,
   JSON_KIND,
 } from './index.js';
+import { type CborUint8Array } from './types.js';
 
 const GROUP_OUTPUT = 'Output:';
 const GROUP_INPUT = 'Input:';
