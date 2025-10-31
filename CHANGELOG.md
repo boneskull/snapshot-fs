@@ -1,5 +1,13 @@
 # Changelog
 
+## [6.0.1](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v6.0.0...snapshot-fs-v6.0.1) (2025-10-31)
+
+
+### Bug Fixes
+
+* **deps:** remove dependency on @jsonjoy/json-pack ([d1cf511](https://github.com/boneskull/snapshot-fs/commit/d1cf5118c52c62c8ef6cc06d85cb2c1ca4f6b24a))
+* **deps:** update dependency [@jsonjoy](https://github.com/jsonjoy).com/json-pack to v1.21.0 ([#572](https://github.com/boneskull/snapshot-fs/issues/572)) ([319429c](https://github.com/boneskull/snapshot-fs/commit/319429c232e2749bc33a45650aa89a24c43cfabf))
+
 ## [6.0.0](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v5.0.4...snapshot-fs-v6.0.0) (2025-10-17)
 
 
