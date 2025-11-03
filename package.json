@@ -14,7 +14,7 @@
     "node": "^22.16.0 || >=24.0.0"
   },
   "bin": {
-    "snapshot-fs": "dist/esm/cli.js"
+    "snapshot-fs": "dist/cli.js"
   },
   "main": "./dist/index.cjs",
   "types": "./dist/index.d.cts",
@@ -25,6 +25,11 @@
       "types": "./dist/index.d.cts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./cli": {
+      "types": "./dist/cli.d.cts",
+      "import": "./dist/cli.js",
+      "require": "./dist/cli.cjs"
     }
   },
   "files": [
@@ -129,7 +134,8 @@
   "zshy": {
     "exports": {
       "./package.json": "./package.json",
-      ".": "./src/index.ts"
+      ".": "./src/index.ts",
+      "./cli": "./src/cli.ts"
     }
   }
 }
