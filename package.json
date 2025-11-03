@@ -79,7 +79,7 @@
     "@stylistic/eslint-plugin": "5.5.0",
     "@types/node": "22.18.13",
     "@types/yargs": "17.0.34",
-    "bupkis": "0.12.1",
+    "bupkis": "0.12.2",
     "c8": "10.1.3",
     "eslint": "9.38.0",
     "eslint-plugin-jsonc": "2.21.0",
