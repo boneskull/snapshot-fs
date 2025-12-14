@@ -77,7 +77,7 @@
     "@commitlint/config-conventional": "20.2.0",
     "@eslint/js": "9.39.1",
     "@stylistic/eslint-plugin": "5.6.1",
-    "@types/node": "24.10.2",
+    "@types/node": "24.10.3",
     "@types/yargs": "17.0.35",
     "bupkis": "0.14.0",
     "c8": "10.1.3",
