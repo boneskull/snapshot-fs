@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.0.5](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v6.0.4...snapshot-fs-v6.0.5) (2026-01-06)
+
+
+### Bug Fixes
+
+* **cli:** migrate to bargs ([#675](https://github.com/boneskull/snapshot-fs/issues/675)) ([1d55681](https://github.com/boneskull/snapshot-fs/commit/1d55681357273495b5ad0398dd4d9511526c442c))
+
 ## [6.0.4](https://github.com/boneskull/snapshot-fs/compare/snapshot-fs-v6.0.3...snapshot-fs-v6.0.4) (2025-12-17)
 
 
