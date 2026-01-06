@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-/* eslint-disable @typescript-eslint/unbound-method */
 /**
  * Writes a DirectoryJSON object or snapshot (with --binary flag) to file.
  *
@@ -10,13 +9,13 @@
  * @see {@link https://npm.im/memfs}
  */
 
+import { bargs, opt, pos } from '@boneskull/bargs';
 import { type JsonUint8Array } from 'memfs/lib/snapshot/json.js';
 import { type SnapshotNode } from 'memfs/lib/snapshot/types.js';
-import nodeFs from 'node:fs';
+import nodeFs, { readFileSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import yargs from 'yargs';
-import { hideBin } from 'yargs/helpers';
+import { fileURLToPath } from 'node:url';
 
 import {
   CBOR_KIND,
@@ -29,87 +28,108 @@ import {
 } from './index.js';
 import { type CborUint8Array } from './types.js';
 
-const GROUP_OUTPUT = 'Output:';
-const GROUP_INPUT = 'Input:';
+// Extract version from package.json
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const pkg = JSON.parse(
+  readFileSync(path.join(__dirname, '..', 'package.json'), 'utf-8'),
+) as { version: string };
+
+// Shared format choices for both commands
+const FORMAT_CHOICES = [CBOR_KIND, CJSON_KIND, JSON_KIND] as const;
 
 async function main(): Promise<void> {
-  await yargs(hideBin(process.argv))
-    .version()
-    .strict()
-    .help()
-    .scriptName('snapshot-fs')
-    .epilog(
-      `For more information, visit https://github.com/boneskull/snapshot-fs`,
-    )
-    .options({
-      separator: {
-        alias: 'sep',
-        choices: ['posix', 'win32'],
-        default: 'posix',
-        describe: 'Path separator',
-        global: true,
-        group: GROUP_OUTPUT,
-      },
-    })
+  // Create command parser: options + positional
+  const createOptions = opt.options({
+    format: opt.enum(FORMAT_CHOICES, {
+      aliases: ['f'],
+      default: CJSON_KIND,
+      description: 'Snapshot format',
+    }),
+    separator: opt.enum(['posix', 'win32'], {
+      aliases: ['sep'],
+      default: 'posix',
+      description: 'Path separator',
+    }),
+    source: opt.string({
+      aliases: ['s'],
+      default: process.cwd(),
+      description: 'File or directory to snapshot',
+    }),
+  });
 
-    .middleware((argv) => {
-      argv.separator =
-        argv.separator === 'posix' ? path.posix.sep : path.win32.sep;
+  const createPositionals = pos.positionals(
+    pos.string({ description: 'Path to output file', name: 'dest' }),
+  );
+
+  const createParser = createPositionals(createOptions);
+
+  // Export command parser: options + positionals
+  const exportOptions = opt.options({
+    'dry-run': opt.boolean({
+      aliases: ['D'],
+      description: 'Print what would be written to the filesystem',
+    }),
+    format: opt.enum(FORMAT_CHOICES, {
+      aliases: ['f'],
+      default: CJSON_KIND,
+      description: 'Snapshot format',
+    }),
+    separator: opt.enum(['posix', 'win32'], {
+      aliases: ['sep'],
+      default: 'posix',
+      description: 'Path separator',
+    }),
+  });
+
+  const exportPositionals = pos.positionals(
+    pos.string({
+      description: 'Path to snapshot file (CBOR/CJSON/DirectoryJSON)',
+      name: 'snapshot',
+      required: true,
+    }),
+    pos.string({
+      default: process.cwd(),
+      description: 'Destination directory',
+      name: 'dest',
+    }),
+  );
+
+  const exportParser = exportPositionals(exportOptions);
+
+  await bargs
+    .create('snapshot-fs', {
+      epilog:
+        'For more information, visit https://github.com/boneskull/snapshot-fs',
+      version: pkg.version,
     })
     .command(
-      ['$0 [dest]', 'create [dest]'],
-      'Create memfs snapshot from filesystem',
-      (yargs) =>
-        yargs
-          .positional('dest', {
-            coerce: path.resolve,
-            describe: 'Path to output file',
-          })
-          .options({
-            format: {
-              alias: 'f',
-              choices: [CBOR_KIND, CJSON_KIND, JSON_KIND],
-              default: CJSON_KIND,
-              describe: 'Snapshot format',
-              group: GROUP_OUTPUT,
-              nargs: 1,
-              requiresArg: true,
-              type: 'string',
-            },
-            source: {
-              alias: 's',
-              coerce: path.resolve,
-              default: process.cwd(),
-              defaultDescription: '(current directory)',
-              describe: 'File or directory to snapshot',
-              group: GROUP_INPUT,
-              nargs: 1,
-              requiresArg: true,
-              type: 'string',
-            },
-          }),
-      async ({ dest, format: kind, separator, source }) => {
-        const pathSep = separator as typeof path.sep;
+      'create',
+      createParser,
+      async ({ positionals, values }) => {
+        const [destRaw] = positionals;
+        const dest = destRaw ? path.resolve(destRaw) : undefined;
+        const kind = values.format;
+        const source = path.resolve(values.source);
+        // Transform separator string to actual path separator
+        const pathSep =
+          values.separator === 'posix' ? path.posix.sep : path.win32.sep;
+
         if (kind === JSON_KIND) {
           console.error(
             '[WARN] DirectoryJSON output is lossy and should be avoided',
           );
         }
+
         const output =
           kind === CBOR_KIND
-            ? await createCBORSnapshot({
-                separator: pathSep,
-                source,
-              })
+            ? await createCBORSnapshot({ separator: pathSep, source })
             : kind === JSON_KIND
               ? await createJSONSnapshot({ separator: pathSep, source })
               : await createCJSONSnapshot({ separator: pathSep, source });
 
         if (dest) {
           await mkdir(path.dirname(dest), { recursive: true });
-
           await writeFile(dest, output);
-
           console.error(
             '[INFO] Wrote %s snapshot of %s to %s',
             kind.toUpperCase(),
@@ -120,41 +140,20 @@ async function main(): Promise<void> {
           console.log(output);
         }
       },
+      'Create memfs snapshot from filesystem',
     )
     .command(
-      'export <snapshot> [dest]',
-      'Export a JSON snapshot to the filesystem',
-      (yargs) =>
-        yargs
-          .positional('snapshot', {
-            coerce: path.resolve,
-            demandOption: true,
-            describe: 'Path to snapshot file (CBOR/CJSON/DirectoryJSON)',
-          })
-          .positional('dest', {
-            coerce: path.resolve,
-            default: process.cwd(),
-            defaultDescription: 'Current working directory',
-            describe: 'Destination directory',
-          })
-          .options({
-            'dry-run': {
-              alias: 'D',
-              description: 'Print what would be written to the filesystem',
-              type: 'boolean',
-            },
-            format: {
-              alias: 'f',
-              choices: [CBOR_KIND, CJSON_KIND, JSON_KIND],
-              default: CJSON_KIND,
-              describe: 'Snapshot format',
-              nargs: 1,
-              requiresArg: true,
-              type: 'string',
-            },
-          }),
-      async ({ dest, dryRun, format: kind, snapshot }) => {
+      'export',
+      exportParser,
+      async ({ positionals, values }) => {
+        const [snapshotRaw, destRaw] = positionals;
+        const snapshot = path.resolve(snapshotRaw);
+        const dest = path.resolve(destRaw);
+        const dryRun = values['dry-run'];
+        const kind = values.format;
+
         const data = (await nodeFs.promises.readFile(snapshot)) as unknown;
+
         switch (kind) {
           case CBOR_KIND: {
             await exportSnapshot(kind, data as CborUint8Array<SnapshotNode>, {
@@ -193,8 +192,9 @@ async function main(): Promise<void> {
           );
         }
       },
+      'Export a JSON snapshot to the filesystem',
     )
-    .options({})
+    .defaultCommand('create')
     .parseAsync();
 }
 
