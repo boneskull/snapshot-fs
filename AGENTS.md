@@ -37,7 +37,7 @@ npm ci --foreground-scripts
 npm run build
 ```
 
-- Uses tshy to create dual builds in `dist/commonjs/` and `dist/esm/`
+- Uses `zshy` to create dual builds in `dist/` (`.cjs` and `.js`)
 - Required before testing CLI or running manually
 - Takes ~5 seconds
 
