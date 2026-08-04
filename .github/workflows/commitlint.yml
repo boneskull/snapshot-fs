@@ -13,7 +13,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
       - name: Install dependencies
-        uses: bahmutov/npm-install@3e063b974f0d209807684aa23e534b3dde517fd9 # v1.11.2
+        uses: bahmutov/npm-install@20216767ca67f0f7b4d095dc5859c5700a6581cb # v1.12.1
         with:
           install-command: npm ci --foreground-scripts
       - name: Run commitlint
