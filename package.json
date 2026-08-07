@@ -87,7 +87,7 @@
     "husky": "9.1.7",
     "knip": "5.88.1",
     "lint-staged": "16.4.0",
-    "npm-run-all2": "8.0.4",
+    "npm-run-all2": "9.0.3",
     "prettier": "3.7.4",
     "prettier-plugin-jsdoc": "1.8.1",
     "prettier-plugin-organize-imports": "4.3.0",
