@@ -68,7 +68,7 @@
   "dependencies": {
     "@boneskull/bargs": "3.0.1",
     "json-stable-stringify": "1.3.0",
-    "memfs": "4.51.1",
+    "memfs": "4.71.0",
     "supports-color": "10.2.2",
     "tree-dump": "1.1.0"
   },
